@@ -7,11 +7,11 @@ public class Player : NetworkBehaviour
 
     public override void OnStartLocalPlayer()
     {
-        userID = NetworkManagerUI.instance.userIDInput.text;
+        userID = NetworkUIManager.instance.userIDInput.text;
     }
 }
 public struct ChatMessage : NetworkMessage
 {
-    public string userID;
-    public string message;
+    public string UserID;
+    public string Message;
 }

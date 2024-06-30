@@ -1,10 +1,9 @@
-using UnityEngine;
 using Mirror;
 using TMPro;
 
 public class ChatManager : NetworkBehaviour
 {
-    public TextMeshProUGUI chatDisplay;
+    public TextMeshProUGUI chatLog;
 
     public override void OnStartServer()
     {
@@ -14,16 +13,12 @@ public class ChatManager : NetworkBehaviour
     [Server]
     private void OnChatMessageReceived(NetworkConnection conn, ChatMessage message)
     {
-        RpcDisplayMessage(message.userID, message.message);
+        RpcDisplayMessage(message.UserID, message.Message);
     }
 
     [ClientRpc]
-    private void RpcDisplayMessage(string uesrID, string message)
+    private void RpcDisplayMessage(string userID, string message)
     {
-        if (chatDisplay == null)
-        {
-            chatDisplay = NetworkManagerUI.instance.chatDisplay;
-        }
-        chatDisplay.text += $"<color=blue>{uesrID}</color>: <color=white>{message}</color>\n";
+        chatLog.text += $"<color=blue>{userID}</color>: <color=white>{message}</color>\n";
     }
 }
