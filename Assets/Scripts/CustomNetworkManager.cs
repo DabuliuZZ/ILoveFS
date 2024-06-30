@@ -10,7 +10,7 @@ public class CustomNetworkManager : NetworkManager
     public override void OnStartServer()
     {
         base.OnStartServer();
-        statusLog.text += "<color=yellow>Server started.</color>" + "\n";
+        statusLog.text += "Server started." + "\n";
         
         NetworkClient.RegisterPrefab(playerPrefab);
     }
@@ -18,14 +18,14 @@ public class CustomNetworkManager : NetworkManager
     public override void OnServerConnect(NetworkConnectionToClient conn)
     {
         base.OnServerConnect(conn);
-        statusLog.text += $"<color=yellow>Player connected: {conn.connectionId}</color>" + "\n";
+        statusLog.text += "Player connected" + conn.connectionId + "\n";
     }
 
     public override void OnServerDisconnect(NetworkConnectionToClient conn)
     {
-        statusLog.text += $"<color=yellow>Player disconnected: {conn.connectionId}</color>" + "\n";
+        statusLog.text += "Player disconnected: " + conn.connectionId + "\n";
         playerCount--;
-        statusLog.text += $"<color=yellow>Current player count: {playerCount}</color>" + "\n";
+        statusLog.text += "Current player count: " + playerCount + "\n";
         base.OnServerDisconnect(conn);
     }
 
@@ -38,19 +38,19 @@ public class CustomNetworkManager : NetworkManager
 
         NetworkServer.AddPlayerForConnection(conn, player);
         playerCount++;
-        statusLog.text += $"<color=yellow>Player added: {conn.connectionId}</color>" + "\n";
-        statusLog.text += $"<color=yellow>Current player count: {playerCount}</color>" + "\n";
+        statusLog.text += "Player added: " + conn.connectionId + "\n";
+        statusLog.text += "Current player count: " + playerCount + "\n";
     }
 
     public override void OnClientConnect()
     {
         base.OnClientConnect();
-        statusLog.text += "<color=yellow>Connected to server.</color>" + "\n";
+        statusLog.text += "Connected to server." + "\n";
     }
 
     public override void OnClientDisconnect()
     {
-        statusLog.text += "<color=yellow>Disconnected from server.</color>" + "\n";
+        statusLog.text += "Disconnected from server." + "\n";
         base.OnClientDisconnect();
     }
 }

@@ -19,6 +19,6 @@ public class ChatManager : NetworkBehaviour
     [ClientRpc]
     private void RpcDisplayMessage(string userID, string message)
     {
-        chatLog.text += $"<color=blue>{userID}</color>: <color=white>{message}</color>\n";
+        chatLog.text += "<color=blue>" + userID + ":</color> <color=white>" + message + "</color>" + "\n";
     }
 }
