@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 191510936}
   - component: {fileID: 191510934}
   m_Layer: 0
-  m_Name: mgr
+  m_Name: NetworkManagerUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -379,7 +379,7 @@ Transform:
   m_GameObject: {fileID: 191510933}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 519.8688, y: 338.9828, z: 1.691202}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -397,7 +397,7 @@ GameObject:
   - component: {fileID: 195880096}
   - component: {fileID: 195880095}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: ConnectLog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -531,7 +531,7 @@ GameObject:
   - component: {fileID: 234961132}
   - component: {fileID: 234961131}
   m_Layer: 5
-  m_Name: InputPanel (1)
+  m_Name: AfterConnectPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -609,7 +609,7 @@ GameObject:
   - component: {fileID: 266889594}
   - component: {fileID: 266889596}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: UserID
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1071,7 +1071,7 @@ GameObject:
   - component: {fileID: 626034134}
   - component: {fileID: 626034136}
   m_Layer: 5
-  m_Name: InputField (TMP) (1)
+  m_Name: IP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1763,7 +1763,7 @@ GameObject:
   - component: {fileID: 1015214032}
   - component: {fileID: 1015214034}
   m_Layer: 5
-  m_Name: Button
+  m_Name: ConnectButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2248,7 +2248,7 @@ GameObject:
   - component: {fileID: 1615059441}
   - component: {fileID: 1615059440}
   m_Layer: 5
-  m_Name: InputPanel
+  m_Name: ConnectPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2267,8 +2267,8 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 266889593}
-  - {fileID: 626034133}
   - {fileID: 2113248082}
+  - {fileID: 626034133}
   - {fileID: 1015214031}
   m_Father: {fileID: 1340135984}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2291,7 +2291,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.392}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -2327,7 +2327,7 @@ GameObject:
   - component: {fileID: 1652519430}
   - component: {fileID: 1652519432}
   m_Layer: 0
-  m_Name: CHAt
+  m_Name: ChatManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2358,7 +2358,7 @@ Transform:
   m_GameObject: {fileID: 1652519429}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 519.8688, y: 338.9828, z: 1.691202}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2740,7 +2740,7 @@ GameObject:
   - component: {fileID: 1858020352}
   - component: {fileID: 1858020355}
   m_Layer: 0
-  m_Name: NTM
+  m_Name: CustomNetworkManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2779,7 +2779,7 @@ Transform:
   m_GameObject: {fileID: 1858020351}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 519.8688, y: 338.9828, z: 1.691202}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2845,7 +2845,7 @@ GameObject:
   - component: {fileID: 1912430251}
   - component: {fileID: 1912430253}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: Message
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3070,7 +3070,7 @@ GameObject:
   - component: {fileID: 2113248082}
   - component: {fileID: 2113248083}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: isHost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3154,5 +3154,5 @@ SceneRoots:
   - {fileID: 447903569}
   - {fileID: 1340135984}
   - {fileID: 191510936}
-  - {fileID: 1652519431}
   - {fileID: 1858020354}
+  - {fileID: 1652519431}
