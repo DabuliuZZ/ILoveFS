@@ -368,7 +368,6 @@ MonoBehaviour:
   connectPanel: {fileID: 1615059438}
   afterConnectPanel: {fileID: 234961129}
   messageInput: {fileID: 1912430253}
-  chatLog: {fileID: 195880095}
   statusLog: {fileID: 195880095}
   customNetworkManager: {fileID: 1858020355}
 --- !u!4 &191510936
@@ -537,7 +536,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &234961130
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1214,7 +1213,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &626034133
 RectTransform:
   m_ObjectHideFlags: 0

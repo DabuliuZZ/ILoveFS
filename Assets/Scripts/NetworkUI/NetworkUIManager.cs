@@ -13,7 +13,6 @@ public class NetworkUIManager : MonoBehaviour
     public GameObject connectPanel;
     public GameObject afterConnectPanel;
     public TMP_InputField messageInput;
-    public TextMeshProUGUI chatLog;
     public TextMeshProUGUI statusLog; // 用于显示状态信息的UI元素
 
     [SerializeField] private CustomNetworkManager customNetworkManager;
@@ -30,8 +29,6 @@ public class NetworkUIManager : MonoBehaviour
     {
         connectButton.onClick.AddListener(StartGame);
         isHostToggle.onValueChanged.AddListener(delegate { ToggleIPInput(isHostToggle); });
-        ipInput.gameObject.SetActive(false);
-        afterConnectPanel.SetActive(false);
     }
 
     private void ToggleIPInput(Toggle toggle)

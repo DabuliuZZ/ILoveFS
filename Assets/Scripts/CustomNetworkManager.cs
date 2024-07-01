@@ -11,7 +11,6 @@ public class CustomNetworkManager : NetworkManager
     {
         base.OnStartServer();
         statusLog.text += "Server started." + "\n";
-        
         NetworkClient.RegisterPrefab(playerPrefab);
     }
 
