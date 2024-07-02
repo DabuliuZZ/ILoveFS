@@ -7,22 +7,17 @@ public class PlayerChat : NetworkBehaviour
 
     private void Start()
     {
-        if (isLocalPlayer)
-        {
-            messageInput = NetworkUIManager.instance.messageInput;
-            messageInput.onSubmit.AddListener(delegate { SendMessage(); });
-        }
+        messageInput = NetworkUIManager.instance.messageInput;
+        messageInput.onSubmit.AddListener(delegate { SendMessage(); });
     }
 
     private void SendMessage()
     {
-        if (!isLocalPlayer) return;
-
         string message = messageInput.text;
         
         ChatMessage chatMessage = new ChatMessage
         {
-            UserID = NetworkClient.connection.identity.GetComponent<Player>().userID,
+            UserID = GetComponent<Player>().userID,
             Message = message
         };
 

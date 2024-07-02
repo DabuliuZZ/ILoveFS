@@ -10,14 +10,17 @@ public class ChatManager : NetworkBehaviour
         NetworkServer.RegisterHandler<ChatMessage>(OnChatMessageReceived);
     }
 
-    [Server]
-    private void OnChatMessageReceived(NetworkConnection conn, ChatMessage message)
+    public override void OnStartClient()
+    {
+        CustomNetworkManager.instance.AddComponentsForPlayer(typeof(PlayerChat));
+    }
+
+    [Server] private void OnChatMessageReceived(NetworkConnection conn, ChatMessage message)
     {
         RpcDisplayMessage(message.UserID, message.Message);
     }
 
-    [ClientRpc]
-    private void RpcDisplayMessage(string userID, string message)
+    [ClientRpc] private void RpcDisplayMessage(string userID, string message)
     {
         chatLog.text += "<color=blue>" + userID + ":</color> <color=white>" + message + "</color>" + "\n";
     }

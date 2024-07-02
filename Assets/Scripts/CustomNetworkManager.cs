@@ -1,12 +1,29 @@
 using UnityEngine;
 using Mirror;
 using TMPro;
+using System.Collections;
 
 public class CustomNetworkManager : NetworkManager
 {
+    public static CustomNetworkManager instance;
     public TextMeshProUGUI statusLog; // 用于显示状态信息的UI元素
     private int playerCount;
 
+    public override void Awake()
+    {
+        base.Awake();
+
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    
     public override void OnStartServer()
     {
         base.OnStartServer();
@@ -30,12 +47,11 @@ public class CustomNetworkManager : NetworkManager
 
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
-        Transform startPos = GetStartPosition();
-        GameObject player = startPos != null
-            ? Instantiate(playerPrefab, startPos.position, startPos.rotation)
-            : Instantiate(playerPrefab);
-
+        GameObject player = Instantiate(playerPrefab);
         NetworkServer.AddPlayerForConnection(conn, player);
+        
+        player.GetComponent<Player>().clientId = conn.connectionId;
+        
         playerCount++;
         statusLog.text += "Player added: " + conn.connectionId + "\n";
         statusLog.text += "Current player count: " + playerCount + "\n";
@@ -51,5 +67,29 @@ public class CustomNetworkManager : NetworkManager
     {
         statusLog.text += "Disconnected from server." + "\n";
         base.OnClientDisconnect();
+    }
+    
+    // 添加脚本的方法
+    public void AddComponentsForPlayer(params System.Type[] componentTypes)
+    {
+        StartCoroutine(AddComponentsForPlayerCoroutine(componentTypes));
+    }
+    private IEnumerator AddComponentsForPlayerCoroutine(System.Type[] componentTypes)
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        foreach (var player in FindObjectsOfType<Player>())
+        {
+            if (player.isLocalPlayer)
+            {
+                foreach (var componentType in componentTypes)
+                {
+                    if (!player.gameObject.GetComponent(componentType))
+                    {
+                        player.gameObject.AddComponent(componentType);
+                    }
+                }
+            }
+        }
     }
 }

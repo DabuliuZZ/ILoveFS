@@ -1,34 +1,44 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Mirror;
 
 public class NetworkUIManager : MonoBehaviour
 {
     public static NetworkUIManager instance;
 
     public TMP_InputField userIDInput;
-    public Toggle isHostToggle;
-    public TMP_InputField ipInput;
-    public Button connectButton;
-    public GameObject connectPanel;
-    public GameObject afterConnectPanel;
+    [SerializeField] private Toggle isHostToggle;
+    [SerializeField] private TMP_InputField ipInput;
+    [SerializeField] private Button connectButton;
+    [SerializeField] private GameObject connectPanel;
+    [SerializeField] private GameObject afterConnectPanel;
     public TMP_InputField messageInput;
-    public TextMeshProUGUI statusLog; // 用于显示状态信息的UI元素
-
+    [SerializeField] private TextMeshProUGUI statusLog; // 用于显示状态信息的UI元素
+    [SerializeField] private Button startGameButton;
+    
     [SerializeField] private CustomNetworkManager customNetworkManager;
 
     private void Awake()
     {
-        if (instance == null) { instance = this; }
-        else { Destroy(gameObject); }
+        if (instance == null)
+        {
+            instance = this; 
+            //DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         
         customNetworkManager.statusLog = statusLog; // 设置状态显示
     }
 
     private void Start()
     {
-        connectButton.onClick.AddListener(StartGame);
+        connectButton.onClick.AddListener(Connect);
         isHostToggle.onValueChanged.AddListener(delegate { ToggleIPInput(isHostToggle); });
+        startGameButton.onClick.AddListener(StartGame);
     }
 
     private void ToggleIPInput(Toggle toggle)
@@ -36,11 +46,12 @@ public class NetworkUIManager : MonoBehaviour
         ipInput.gameObject.SetActive(!toggle.isOn);
     }
 
-    private void StartGame()
+    private void Connect()
     {
         if (isHostToggle.isOn)
         {
             Debug.Log("Starting as host...");
+            startGameButton.gameObject.SetActive(true);
             customNetworkManager.StartHost();
         }
         else
@@ -51,8 +62,14 @@ public class NetworkUIManager : MonoBehaviour
             customNetworkManager.networkAddress = ipAddress;
             customNetworkManager.StartClient();
         }
-
+        
         connectPanel.SetActive(false);
         afterConnectPanel.SetActive(true);
+    }
+    
+    [Server] private void StartGame()
+    {
+        // 跳场景
+        NetworkManager.singleton.ServerChangeScene("CharacterSelectionScene");
     }
 }
