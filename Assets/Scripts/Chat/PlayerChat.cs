@@ -1,3 +1,4 @@
+using System;
 using Mirror;
 using TMPro;
 
@@ -6,6 +7,11 @@ public class PlayerChat : NetworkBehaviour
     private TMP_InputField messageInput;
 
     private void Start()
+    {
+        enabled = false;
+    }
+
+    private void OnEnable()
     {
         messageInput = NetworkUIManager.instance.messageInput;
         messageInput.onSubmit.AddListener(delegate { SendMessage(); });

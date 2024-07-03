@@ -11,10 +11,6 @@ public class Player : NetworkBehaviour
     }
 }
 
-
-
-
-
 public struct ChatMessage : NetworkMessage
 {
     public string UserID;

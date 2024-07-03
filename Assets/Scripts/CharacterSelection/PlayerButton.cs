@@ -1,3 +1,4 @@
+using System;
 using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +20,11 @@ public class PlayerButton : NetworkBehaviour
     }
 
     private void Start()
+    {
+        enabled = false;
+    }
+
+    private void OnEnable()
     {
         buttonSet1.SetActive(false);
         buttonSet2.SetActive(false);
@@ -59,7 +65,7 @@ public class PlayerButton : NetworkBehaviour
         CmdSendSpriteChange(currentSpriteIndex);
     }
     
-    [Command(requiresAuthority = false)] public void CmdSendSpriteChange(int newSpriteIndex)
+    [Command] public void CmdSendSpriteChange(int newSpriteIndex)
     {
         RpcUpdateSprite(newSpriteIndex);
     }

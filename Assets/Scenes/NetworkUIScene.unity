@@ -370,6 +370,7 @@ MonoBehaviour:
   messageInput: {fileID: 1912430253}
   statusLog: {fileID: 195880095}
   startGameButton: {fileID: 1104392349}
+  chatManager: {fileID: 1652519430}
   customNetworkManager: {fileID: 1858020355}
 --- !u!4 &191510936
 Transform:
@@ -3212,7 +3213,7 @@ MonoBehaviour:
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 3024178099215758726, guid: 04ee9ab934a8d664a9fa51e094b6fe83, type: 3}
-  autoCreatePlayer: 0
+  autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs: []
   exceptionsDisconnect: 1

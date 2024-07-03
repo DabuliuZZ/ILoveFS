@@ -51,7 +51,6 @@ public class CustomNetworkManager : NetworkManager
         NetworkServer.AddPlayerForConnection(conn, player);
         
         player.GetComponent<Player>().clientId = conn.connectionId;
-        DontDestroyOnLoad(player);
         
         playerCount++;
         statusLog.text += "Player added: " + conn.connectionId + "\n";
@@ -70,6 +69,7 @@ public class CustomNetworkManager : NetworkManager
         base.OnClientDisconnect();
     }
     
+    
     // 添加脚本的方法
     public void AddComponentsForPlayer(params System.Type[] componentTypes)
     {
@@ -85,9 +85,9 @@ public class CustomNetworkManager : NetworkManager
             {
                 foreach (var componentType in componentTypes)
                 {
-                    if (!player.gameObject.GetComponent(componentType))
+                    if (player.gameObject.GetComponent(componentType) is NetworkBehaviour networkBehaviour )
                     {
-                        player.gameObject.AddComponent(componentType);
+                        networkBehaviour.enabled = true;
                     }
                 }
             }
