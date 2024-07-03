@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4359296766463471978}
   - component: {fileID: 7660173592802477766}
-  - component: {fileID: 6503978351346709722}
+  - component: {fileID: -8276908631645204345}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -50,7 +50,7 @@ MonoBehaviour:
   syncInterval: 0
   userID: 
   clientId: 0
---- !u!114 &6503978351346709722
+--- !u!114 &-8276908631645204345
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

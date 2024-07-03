@@ -10,11 +10,12 @@ public class CharacterSelectionManager : NetworkBehaviour
     public override void OnStartServer()
     {
         serverControlButtons.SetActive(true); // 服务器端激活控制按钮
-        Invoke("OffServerButton",1f);
+        Invoke("OffServerButton",1.5f);
     }
 
     public override void OnStartClient()
     {
+        if(isServer) return;
         CustomNetworkManager.instance.AddComponentsForPlayer(typeof(PlayerButton));
     }
     

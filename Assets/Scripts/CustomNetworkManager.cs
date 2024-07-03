@@ -76,7 +76,7 @@ public class CustomNetworkManager : NetworkManager
     }
     private IEnumerator AddComponentsForPlayerCoroutine(System.Type[] componentTypes)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
 
         foreach (var player in FindObjectsOfType<Player>())
         {
