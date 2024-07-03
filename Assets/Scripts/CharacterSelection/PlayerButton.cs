@@ -21,7 +21,6 @@ public class PlayerButton : NetworkBehaviour
 
     private void Start()
     {
-        enabled = false;
     }
 
     private void OnEnable()
