@@ -30,8 +30,6 @@ public class CustomNetworkManager : NetworkManager
         base.OnStartServer();
         statusLog.text += "Server started." + "\n";
         NetworkClient.RegisterPrefab(playerPrefab);
-        
-
     }
 
     public override void OnServerConnect(NetworkConnectionToClient conn)
@@ -73,11 +71,7 @@ public class CustomNetworkManager : NetworkManager
         base.OnClientDisconnect();
     }
     
-    
-    
-    
-    
-    // 服务端给所有Player添加脚本的方法
+    // 添加脚本的方法
     public void AddComponentsForAllPlayers(params System.Type[] componentTypes)
     {
         StartCoroutine(AddComponentsForAllPlayersCoroutine(componentTypes));
@@ -94,31 +88,6 @@ public class CustomNetworkManager : NetworkManager
                 if (player.gameObject.GetComponent(componentType) is NetworkBehaviour networkBehaviour )
                 {
                     networkBehaviour.enabled = true;
-                }
-            }
-        }
-    }
-    
-    // 客户端给自己的Player添加脚本的方法
-    public void AddComponentsForLocalPlayer(params System.Type[] componentTypes)
-    {
-        StartCoroutine(AddComponentsForLocalPlayerCoroutine(componentTypes));
-    }
-    private IEnumerator AddComponentsForLocalPlayerCoroutine(System.Type[] componentTypes)
-    {
-        yield return new WaitForSeconds(0.5f);
-
-        foreach (var player in FindObjectsOfType<Player>())
-        {
-            //if (player.isLocalPlayer) // 重点
-            {
-                Debug.Log(player + " " + player.isLocalPlayer);
-                foreach (var componentType in componentTypes)
-                {
-                    if (player.gameObject.GetComponent(componentType) is NetworkBehaviour networkBehaviour )
-                    {
-                        networkBehaviour.enabled = true;
-                    }
                 }
             }
         }

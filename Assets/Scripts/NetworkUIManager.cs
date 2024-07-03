@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Mirror;
+using UnityEngine.Serialization;
 
 public class NetworkUIManager : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class NetworkUIManager : MonoBehaviour
     [SerializeField] private GameObject connectPanel;
     [SerializeField] private GameObject afterConnectPanel;
     public TMP_InputField messageInput;
-    [SerializeField] private TextMeshProUGUI statusLog; // 用于显示状态信息的UI元素
+    public TextMeshProUGUI Log; // 用于显示状态信息的UI元素
     [SerializeField] private Button startGameButton;
     [SerializeField] private CustomNetworkManager customNetworkManager;
 
@@ -29,7 +30,7 @@ public class NetworkUIManager : MonoBehaviour
             Destroy(gameObject);
         }
         
-        customNetworkManager.statusLog = statusLog; // 设置状态显示
+        customNetworkManager.statusLog = Log; // 设置状态显示
     }
 
     private void Start()

@@ -25,31 +25,24 @@ public class PlayerButton : NetworkBehaviour
         characterImage1 = CharacterSelectionSingleton.Instance.character1;
         characterImage2 = CharacterSelectionSingleton.Instance.character2;
         characterSkins = CharacterSelectionSingleton.Instance.characterSkins;
-
         
         var player = GetComponent<Player>();
-        var id = player.clientId;
-        Debug.Log(id);
+        var clientId = player.clientId;
         if (player.isLocalPlayer)
         {
-            Debug.Log(id);
-            if (id == 1)
+            if (clientId == 1)
             {
                 buttonSet1.SetActive(true);
                 currentCharacter = characterImage1;
                 GetButtonAndCharacter(buttonSet1.transform);
-            
             }
-            if (id == 2)
+            if (clientId == 2)
             {
                 buttonSet2.SetActive(true);
                 currentCharacter = characterImage2;
                 GetButtonAndCharacter(buttonSet2.transform);
             }
         }
-        
-        Debug.Log(buttonSet1.activeSelf);
-        Debug.Log(buttonSet2.activeSelf);
     }
 
     private void GetButtonAndCharacter(Transform buttonSet)
@@ -84,12 +77,10 @@ public class PlayerButton : NetworkBehaviour
     {
         if (clientId == 1)
         {
-
             characterImage1.sprite = characterSkins[newSpriteIndex];
         }
         if (clientId == 2)
         {
-
             characterImage2.sprite = characterSkins[newSpriteIndex];
         }
     }
