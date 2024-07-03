@@ -10,16 +10,17 @@ public class CharacterSelectionManager : NetworkBehaviour
     
     public override void OnStartServer()
     {
+        // 如果当前客户端是服务端，那么把所有 Player 的当前所需脚本都打开
+        CustomNetworkManager.instance.AddComponentsForAllPlayers(typeof(PlayerButton));
+        
         serverControlButtons.SetActive(true); // 服务器端激活控制按钮
-        Invoke("OffServerButton",1.5f);
+        Invoke("OffServerButton",1f);
     }
-
-    // 每个客户端在进入场景后独立调用一次该方法，
-    // 如果当前客户端是服务端，那么把所有 Player 的当前所需脚本都打开，
-    // 如果当前客户端不是服务端，那么只把自己的 Player 的当前所需脚本打开。
-    public override void OnStartClient() 
+    
+    public override void OnStartClient() // 每个客户端在进入场景后独立调用一次该方法，类似于 Start，本地调用，本地执行
     {
-        CustomNetworkManager.instance.AddComponentsForPlayer(isServer,typeof(PlayerButton));
+        if (isServer) return; // 如果当前客户端不是服务端，那么只把当前客户端所对应的 Player 的当前所需脚本打开。
+        CustomNetworkManager.instance.AddComponentsForLocalPlayer(typeof(PlayerButton));
     }
     
     private void OffServerButton()

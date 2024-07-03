@@ -16,7 +16,6 @@ public class NetworkUIManager : MonoBehaviour
     public TMP_InputField messageInput;
     [SerializeField] private TextMeshProUGUI statusLog; // 用于显示状态信息的UI元素
     [SerializeField] private Button startGameButton;
-    [SerializeField] private ChatManager chatManager;
     [SerializeField] private CustomNetworkManager customNetworkManager;
 
     private void Awake()

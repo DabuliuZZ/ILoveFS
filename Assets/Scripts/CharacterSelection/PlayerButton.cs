@@ -6,47 +6,43 @@ using UnityEngine.UI;
 
 public class PlayerButton : NetworkBehaviour
 {
-    [SerializeField] private GameObject buttonSet1; // 客户端1的按钮组
-    [SerializeField] private GameObject buttonSet2; // 客户端2的按钮组
-    private Button switchButton;
-    private Button confirmButton;
-    private Image currentCharacter;
+    private GameObject buttonSet1; // 客户端1的按钮组
+    private GameObject buttonSet2; // 客户端2的按钮组
     private Image characterImage1;
     private Image characterImage2;
     private Sprite[] characterSkins;
+    
+    private Button switchButton;
+    private Button confirmButton;
+    
+    private Image currentCharacter;
     private int currentSpriteIndex;
 
     private void OnEnable()
     {
-        StartCoroutine(GetButtonAndCharacterAsync());
-    }
-
-    IEnumerator GetButtonAndCharacterAsync()
-    {
-        yield return null; //延迟一帧执行
         buttonSet1 = CharacterSelectionSingleton.Instance.buttonSet1;
         buttonSet2 = CharacterSelectionSingleton.Instance.buttonSet2;
-        buttonSet1.SetActive(false);
-        buttonSet2.SetActive(false);
-        
         characterImage1 = CharacterSelectionSingleton.Instance.character1;
         characterImage2 = CharacterSelectionSingleton.Instance.character2;
-        
         characterSkins = CharacterSelectionSingleton.Instance.characterSkins;
+        
+        buttonSet1.SetActive(false);
+        buttonSet2.SetActive(false);
         
         var clientId = GetComponent<Player>().clientId;
         
         if (clientId == 1)
         {
             buttonSet1.SetActive(true);
-            GetButtonAndCharacter(buttonSet1.transform);
             currentCharacter = characterImage1;
+            GetButtonAndCharacter(buttonSet1.transform);
+            
         }
         if (clientId == 2)
         {
             buttonSet2.SetActive(true);
-            GetButtonAndCharacter(buttonSet2.transform);
             currentCharacter = characterImage2;
+            GetButtonAndCharacter(buttonSet2.transform);
         }
     }
 

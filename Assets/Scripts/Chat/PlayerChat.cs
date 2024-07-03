@@ -6,11 +6,6 @@ public class PlayerChat : NetworkBehaviour
 {
     private TMP_InputField messageInput;
 
-    private void Start()
-    {
-        enabled = false;
-    }
-
     private void OnEnable()
     {
         messageInput = NetworkUIManager.instance.messageInput;
