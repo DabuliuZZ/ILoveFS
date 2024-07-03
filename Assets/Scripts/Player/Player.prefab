@@ -84,8 +84,6 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  buttonSet1: {fileID: 0}
-  buttonSet2: {fileID: 0}
 --- !u!114 &-7811517153324334786
 MonoBehaviour:
   m_ObjectHideFlags: 0
