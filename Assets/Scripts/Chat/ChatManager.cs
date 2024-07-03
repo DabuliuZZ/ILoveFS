@@ -12,7 +12,7 @@ public class ChatManager : NetworkBehaviour
 
     public override void OnStartClient()
     {
-        CustomNetworkManager.instance.AddComponentsForPlayer(typeof(PlayerChat));
+        CustomNetworkManager.instance.AddComponentsForPlayer(isServer,typeof(PlayerChat));
     }
 
     [Server] private void OnChatMessageReceived(NetworkConnection conn, ChatMessage message)

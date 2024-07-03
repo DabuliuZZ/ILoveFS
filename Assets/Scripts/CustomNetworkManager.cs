@@ -71,18 +71,19 @@ public class CustomNetworkManager : NetworkManager
     
     
     // 添加脚本的方法
-    public void AddComponentsForPlayer(params System.Type[] componentTypes)
+    public void AddComponentsForPlayer(bool isServer,params System.Type[] componentTypes)
     {
-        StartCoroutine(AddComponentsForPlayerCoroutine(componentTypes));
+        StartCoroutine(AddComponentsForPlayerCoroutine(isServer,componentTypes));
     }
-    private IEnumerator AddComponentsForPlayerCoroutine(System.Type[] componentTypes)
+    private IEnumerator AddComponentsForPlayerCoroutine(bool isServer,System.Type[] componentTypes)
     {
         yield return new WaitForSeconds(1f);
 
         foreach (var player in FindObjectsOfType<Player>())
         {
-            if (player.isLocalPlayer)
+            if (player.isLocalPlayer||isServer)
             {
+                Debug.Log(player + " " + player.isLocalPlayer);
                 foreach (var componentType in componentTypes)
                 {
                     if (player.gameObject.GetComponent(componentType) is NetworkBehaviour networkBehaviour )
@@ -93,4 +94,6 @@ public class CustomNetworkManager : NetworkManager
             }
         }
     }
+    
+
 }

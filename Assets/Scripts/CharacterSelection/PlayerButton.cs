@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,40 +10,52 @@ public class PlayerButton : NetworkBehaviour
     [SerializeField] private GameObject buttonSet2; // 客户端2的按钮组
     private Button switchButton;
     private Button confirmButton;
-    private Image characterImage;
+    private Image currentCharacter;
+    private Image characterImage1;
+    private Image characterImage2;
     private Sprite[] characterSkins;
     private int currentSpriteIndex;
     
-    private void Awake()
-    {
-        buttonSet1 = GameObject.Find("ButtonSet1");
-        buttonSet2 = GameObject.Find("ButtonSet2");
-    }
 
-    private void Start()
-    {
-    }
 
     private void OnEnable()
     {
+        StartCoroutine(GetButtonAndCharacterAsync());
+    }
+
+    IEnumerator GetButtonAndCharacterAsync()
+    {
+        yield return null; //延迟一帧执行
+        buttonSet1 = CharacterSelectionSingleton.Instance.buttonSet1;
+        buttonSet2 = CharacterSelectionSingleton.Instance.buttonSet2;
         buttonSet1.SetActive(false);
         buttonSet2.SetActive(false);
         
+        characterImage1 = CharacterSelectionSingleton.Instance.character1;
+        characterImage2 = CharacterSelectionSingleton.Instance.character2;
+        
+        characterSkins = CharacterSelectionSingleton.Instance.characterSkins;
+        
         var clientId = GetComponent<Player>().clientId;
+        
+        Debug.Log(clientId);
         
         if (clientId == 1)
         {
             buttonSet1.SetActive(true);
-            GetButtonAndCharacter(buttonSet1.transform,"Character1");
+            GetButtonAndCharacter(buttonSet1.transform);
+            currentCharacter = characterImage1;
         }
         if (clientId == 2)
         {
             buttonSet2.SetActive(true);
-            GetButtonAndCharacter(buttonSet1.transform,"Character2");
+            GetButtonAndCharacter(buttonSet2.transform);
+            currentCharacter = characterImage2;
         }
     }
+    
 
-    private void GetButtonAndCharacter(Transform buttonSet,string character)
+    private void GetButtonAndCharacter(Transform buttonSet)
     {
         foreach (Transform button in buttonSet)
         {
@@ -52,26 +65,35 @@ public class PlayerButton : NetworkBehaviour
         switchButton.onClick.AddListener(SwitchSkin);
         confirmButton.onClick.AddListener(ConfirmSkin);
         
-        characterImage = GameObject.Find(character).GetComponent<Image>();
-        characterSkins = GameObject.Find(character).GetComponent<CharacterSkins>().characterSkins;
+
     }
 
     private void SwitchSkin()
     {
         currentSpriteIndex = (currentSpriteIndex + 1) % characterSkins.Length;
-        characterImage.sprite = characterSkins[currentSpriteIndex];
+        currentCharacter.sprite = characterSkins[currentSpriteIndex];
 
-        CmdSendSpriteChange(currentSpriteIndex);
+        var clientId = GetComponent<Player>().clientId;
+        
+        CmdSendSpriteChange(currentSpriteIndex,clientId);
     }
     
-    [Command] public void CmdSendSpriteChange(int newSpriteIndex)
+    [Command] public void CmdSendSpriteChange(int newSpriteIndex,int id)
     {
-        RpcUpdateSprite(newSpriteIndex);
+        Debug.Log(123132);
+        RpcUpdateSprite(newSpriteIndex,id);
     }
     
-    [ClientRpc] public void RpcUpdateSprite(int newSpriteIndex)
+    [ClientRpc] public void RpcUpdateSprite(int newSpriteIndex,int id)
     {
-        characterImage.sprite = characterSkins[newSpriteIndex];
+        if (id == 1)
+        {
+            characterImage1.sprite = characterSkins[newSpriteIndex];
+        }
+        else
+        {
+            characterImage2.sprite = characterSkins[newSpriteIndex];
+        }
     }
     
     private void ConfirmSkin()
