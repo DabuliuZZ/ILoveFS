@@ -9,6 +9,7 @@ public class CustomNetworkManager : NetworkManager
     public TextMeshProUGUI statusLog; // 用于显示状态信息的UI元素
     private int playerCount;
 
+
     public override void Awake()
     {
         base.Awake();
@@ -29,6 +30,8 @@ public class CustomNetworkManager : NetworkManager
         base.OnStartServer();
         statusLog.text += "Server started." + "\n";
         NetworkClient.RegisterPrefab(playerPrefab);
+        
+
     }
 
     public override void OnServerConnect(NetworkConnectionToClient conn)
@@ -51,6 +54,7 @@ public class CustomNetworkManager : NetworkManager
         NetworkServer.AddPlayerForConnection(conn, player);
         
         player.GetComponent<Player>().clientId = conn.connectionId;
+        
         
         playerCount++;
         statusLog.text += "Player added: " + conn.connectionId + "\n";
@@ -106,7 +110,7 @@ public class CustomNetworkManager : NetworkManager
 
         foreach (var player in FindObjectsOfType<Player>())
         {
-            if (player.isLocalPlayer) // 重点
+            //if (player.isLocalPlayer) // 重点
             {
                 Debug.Log(player + " " + player.isLocalPlayer);
                 foreach (var componentType in componentTypes)

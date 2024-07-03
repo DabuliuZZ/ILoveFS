@@ -26,5 +26,9 @@ public class CharacterSelectionSingleton : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
+                
+        buttonSet1.SetActive(false);
+        buttonSet2.SetActive(false);
     }
 }

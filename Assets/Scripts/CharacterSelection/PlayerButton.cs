@@ -25,25 +25,31 @@ public class PlayerButton : NetworkBehaviour
         characterImage1 = CharacterSelectionSingleton.Instance.character1;
         characterImage2 = CharacterSelectionSingleton.Instance.character2;
         characterSkins = CharacterSelectionSingleton.Instance.characterSkins;
+
         
-        buttonSet1.SetActive(false);
-        buttonSet2.SetActive(false);
-        
-        var clientId = GetComponent<Player>().clientId;
-        
-        if (clientId == 1)
+        var player = GetComponent<Player>();
+        var id = player.clientId;
+        Debug.Log(id);
+        if (player.isLocalPlayer)
         {
-            buttonSet1.SetActive(true);
-            currentCharacter = characterImage1;
-            GetButtonAndCharacter(buttonSet1.transform);
+            Debug.Log(id);
+            if (id == 1)
+            {
+                buttonSet1.SetActive(true);
+                currentCharacter = characterImage1;
+                GetButtonAndCharacter(buttonSet1.transform);
             
+            }
+            if (id == 2)
+            {
+                buttonSet2.SetActive(true);
+                currentCharacter = characterImage2;
+                GetButtonAndCharacter(buttonSet2.transform);
+            }
         }
-        if (clientId == 2)
-        {
-            buttonSet2.SetActive(true);
-            currentCharacter = characterImage2;
-            GetButtonAndCharacter(buttonSet2.transform);
-        }
+        
+        Debug.Log(buttonSet1.activeSelf);
+        Debug.Log(buttonSet2.activeSelf);
     }
 
     private void GetButtonAndCharacter(Transform buttonSet)
@@ -55,6 +61,8 @@ public class PlayerButton : NetworkBehaviour
         }
         switchButton.onClick.AddListener(SwitchSkin);
         confirmButton.onClick.AddListener(ConfirmSkin);
+        switchButton.gameObject.SetActive(true);
+        confirmButton.gameObject.SetActive(true);
     }
 
     private void SwitchSkin()
@@ -76,10 +84,12 @@ public class PlayerButton : NetworkBehaviour
     {
         if (clientId == 1)
         {
+
             characterImage1.sprite = characterSkins[newSpriteIndex];
         }
         if (clientId == 2)
         {
+
             characterImage2.sprite = characterSkins[newSpriteIndex];
         }
     }
