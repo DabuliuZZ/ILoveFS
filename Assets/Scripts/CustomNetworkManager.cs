@@ -81,7 +81,7 @@ public class CustomNetworkManager : NetworkManager
 
         foreach (var player in FindObjectsOfType<Player>())
         {
-            if (player.isLocalPlayer||isServer)
+            if (player.isLocalPlayer||isServer) 
             {
                 Debug.Log(player + " " + player.isLocalPlayer);
                 foreach (var componentType in componentTypes)
@@ -94,6 +94,4 @@ public class CustomNetworkManager : NetworkManager
             }
         }
     }
-    
-
 }

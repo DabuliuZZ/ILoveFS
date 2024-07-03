@@ -16,8 +16,6 @@ public class CharacterSelectionSingleton : MonoBehaviour
     public Image character2;
     public Sprite[] characterSkins;
     
-    
-    
     private void Awake()
     {
         if (instance == null)
@@ -27,15 +25,6 @@ public class CharacterSelectionSingleton : MonoBehaviour
         else
         {
             Destroy(gameObject);
-        }
-//        Debug.Log(123);
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Debug.Log(Instance);
         }
     }
 }

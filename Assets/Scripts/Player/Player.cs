@@ -15,12 +15,11 @@ public class Player : NetworkBehaviour
     {
         userID = NetworkUIManager.instance.userIDInput.text;
     }
-
-
-    public void EnableComponent<T>() where T: NetworkBehaviour
-    {
-        GetComponent<T>().enabled = true;
-    }
+    
+    // public void EnableComponent<T>() where T: NetworkBehaviour
+    // {
+    //     GetComponent<T>().enabled = true;
+    // }
 }
 
 public struct ChatMessage : NetworkMessage

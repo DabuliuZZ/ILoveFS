@@ -15,8 +15,6 @@ public class PlayerButton : NetworkBehaviour
     private Image characterImage2;
     private Sprite[] characterSkins;
     private int currentSpriteIndex;
-    
-
 
     private void OnEnable()
     {
@@ -38,8 +36,6 @@ public class PlayerButton : NetworkBehaviour
         
         var clientId = GetComponent<Player>().clientId;
         
-        Debug.Log(clientId);
-        
         if (clientId == 1)
         {
             buttonSet1.SetActive(true);
@@ -53,7 +49,6 @@ public class PlayerButton : NetworkBehaviour
             currentCharacter = characterImage2;
         }
     }
-    
 
     private void GetButtonAndCharacter(Transform buttonSet)
     {
@@ -64,8 +59,6 @@ public class PlayerButton : NetworkBehaviour
         }
         switchButton.onClick.AddListener(SwitchSkin);
         confirmButton.onClick.AddListener(ConfirmSkin);
-        
-
     }
 
     private void SwitchSkin()
@@ -78,19 +71,18 @@ public class PlayerButton : NetworkBehaviour
         CmdSendSpriteChange(currentSpriteIndex,clientId);
     }
     
-    [Command] public void CmdSendSpriteChange(int newSpriteIndex,int id)
+    [Command] public void CmdSendSpriteChange(int newSpriteIndex,int clientId)
     {
-        Debug.Log(123132);
-        RpcUpdateSprite(newSpriteIndex,id);
+        RpcUpdateSprite(newSpriteIndex,clientId);
     }
     
-    [ClientRpc] public void RpcUpdateSprite(int newSpriteIndex,int id)
+    [ClientRpc] public void RpcUpdateSprite(int newSpriteIndex,int clientId)
     {
-        if (id == 1)
+        if (clientId == 1)
         {
             characterImage1.sprite = characterSkins[newSpriteIndex];
         }
-        else
+        if (clientId == 2)
         {
             characterImage2.sprite = characterSkins[newSpriteIndex];
         }
