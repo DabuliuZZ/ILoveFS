@@ -51,6 +51,7 @@ public class CustomNetworkManager : NetworkManager
         NetworkServer.AddPlayerForConnection(conn, player);
         
         player.GetComponent<Player>().clientId = conn.connectionId;
+        DontDestroyOnLoad(player);
         
         playerCount++;
         statusLog.text += "Player added: " + conn.connectionId + "\n";

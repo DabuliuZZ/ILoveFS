@@ -15,7 +15,7 @@ public class CharacterSelectionManager : NetworkBehaviour
 
     public override void OnStartClient()
     {
-        if(isServer) return;
+        if (isServer) return;
         CustomNetworkManager.instance.AddComponentsForPlayer(typeof(PlayerButton));
     }
     

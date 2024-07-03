@@ -2746,7 +2746,6 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   chatLog: {fileID: 195880095}
-  startGameButton: {fileID: 1104392349}
 --- !u!4 &1652519431
 Transform:
   m_ObjectHideFlags: 0
@@ -3213,8 +3212,8 @@ MonoBehaviour:
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 3024178099215758726, guid: 04ee9ab934a8d664a9fa51e094b6fe83, type: 3}
-  autoCreatePlayer: 1
-  playerSpawnMethod: 1
+  autoCreatePlayer: 0
+  playerSpawnMethod: 0
   spawnPrefabs: []
   exceptionsDisconnect: 1
   snapshotSettings:
