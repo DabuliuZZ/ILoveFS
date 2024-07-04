@@ -17,13 +17,14 @@ public class PlayerButton : NetworkBehaviour
     private Image characterImage1;
     private Image characterImage2;
     private Sprite[] characterSkins;
-    private Button switchButton;
-    private Button confirmButton;
+    private List<int> confirmedSkins;
     private TextMeshProUGUI playerLog;
     
+    private Button switchButton;
+    private Button confirmButton;
     private Image currentCharacter;
     private int currentSpriteIndex;
-    private List<int> confirmedSkins;
+
     
     private void OnEnable()
     {
@@ -112,7 +113,6 @@ public class PlayerButton : NetworkBehaviour
         {
             if (currentSpriteIndex == confirmedSkinIndex)
             {
-                Debug.Log("该皮肤已被选择，换一个吧！");
                 playerLog.text += "This skin has been chosen,change one!" + "\n";
                 return;
             }
@@ -120,6 +120,9 @@ public class PlayerButton : NetworkBehaviour
         currentCharacter.color = Color.white;
         switchButton.interactable = false;
         confirmButton.interactable = false;
+        
+        player.skinIndex = currentSpriteIndex;
+        
         CmdConfirmSkin(currentSpriteIndex,clientId);
     }
 

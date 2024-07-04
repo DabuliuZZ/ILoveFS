@@ -5,6 +5,7 @@ public class Player : NetworkBehaviour
 {
     [SyncVar] public string userID;
     [SyncVar] public int clientId;
+    [SyncVar] public int skinIndex;
 
     private void Start()
     {
@@ -15,15 +16,4 @@ public class Player : NetworkBehaviour
     {
         userID = NetworkUIManager.instance.userIDInput.text;
     }
-    
-    // public void EnableComponent<T>() where T: NetworkBehaviour
-    // {
-    //     GetComponent<T>().enabled = true;
-    // }
-}
-
-public struct ChatMessage : NetworkMessage
-{
-    public string UserID;
-    public string Message;
 }
