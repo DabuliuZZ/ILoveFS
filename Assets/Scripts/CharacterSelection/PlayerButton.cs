@@ -10,7 +10,7 @@ public class PlayerButton : NetworkBehaviour
 {
     private Player player;
     private int clientId;
-    private CharacterSelectionSingleton characterSelectionSingleton;
+    private CharacterSelectionManager characterSelectionManager;
     
     private GameObject buttonSet1; // 客户端1的按钮组
     private GameObject buttonSet2; // 客户端2的按钮组
@@ -23,22 +23,22 @@ public class PlayerButton : NetworkBehaviour
     private Button switchButton;
     private Button confirmButton;
     private Image currentCharacter;
-    private int currentSpriteIndex;
+    private int currentSkinIndex;
 
     
     private void OnEnable()
     {
         player = GetComponent<Player>();
         clientId = player.clientId;
-        characterSelectionSingleton = CharacterSelectionSingleton.Instance;
+        characterSelectionManager = CharacterSelectionManager.Instance;
         
-        buttonSet1 = characterSelectionSingleton.buttonSet1;
-        buttonSet2 = characterSelectionSingleton.buttonSet2;
-        characterImage1 = characterSelectionSingleton.character1;
-        characterImage2 = characterSelectionSingleton.character2;
-        characterSkins = characterSelectionSingleton.characterSkins;
-        confirmedSkins = characterSelectionSingleton.confirmedSkins;
-        playerLog = characterSelectionSingleton.playerLog;
+        buttonSet1 = characterSelectionManager.buttonSet1;
+        buttonSet2 = characterSelectionManager.buttonSet2;
+        characterImage1 = characterSelectionManager.character1;
+        characterImage2 = characterSelectionManager.character2;
+        characterSkins = characterSelectionManager.characterSkins;
+        confirmedSkins = characterSelectionManager.confirmedSkins;
+        playerLog = characterSelectionManager.playerLog;
         
         if (player.isLocalPlayer)
         {
@@ -64,22 +64,22 @@ public class PlayerButton : NetworkBehaviour
             if (button.name == "SwitchButton") { switchButton = button.GetComponent<Button>(); }
             if (button.name == "ConfirmButton") { confirmButton = button.GetComponent<Button>(); }
         }
-        switchButton.onClick.AddListener(SwitchSkin);
-        confirmButton.onClick.AddListener(ConfirmSkin);
+        switchButton.onClick.AddListener(OnSwitchSkin);
+        confirmButton.onClick.AddListener(OnConfirmSkin);
         switchButton.gameObject.SetActive(true);
         confirmButton.gameObject.SetActive(true);
     }
 
-    private void SwitchSkin()
+    private void OnSwitchSkin()
     {
-        currentSpriteIndex = (currentSpriteIndex + 1) % characterSkins.Length;
-        currentCharacter.sprite = characterSkins[currentSpriteIndex];
+        currentSkinIndex = (currentSkinIndex + 1) % characterSkins.Length;
+        currentCharacter.sprite = characterSkins[currentSkinIndex];
         
-        CmdSendSpriteChange(currentSpriteIndex, clientId);
+        CmdSendSpriteChange(currentSkinIndex, clientId);
         
         foreach (var confirmedSkinIndex in confirmedSkins)
         {
-            if (currentSpriteIndex == confirmedSkinIndex)
+            if (currentSkinIndex == confirmedSkinIndex)
             {
                 confirmButton.interactable = false;
                 currentCharacter.color = Color.gray;
@@ -90,50 +90,50 @@ public class PlayerButton : NetworkBehaviour
         currentCharacter.color = Color.white;
     }
     
-    [Command] public void CmdSendSpriteChange(int newSpriteIndex, int clientId)
+    [Command] public void CmdSendSpriteChange(int newSkinIndex, int clientId)
     {
-        RpcUpdateSprite(newSpriteIndex, clientId);
+        RpcUpdateSprite(newSkinIndex, clientId);
     }
     
-    [ClientRpc] public void RpcUpdateSprite(int newSpriteIndex, int clientId)
+    [ClientRpc] public void RpcUpdateSprite(int newSkinIndex, int clientId)
     {
         if (clientId == 1)
         {
-            characterImage1.sprite = characterSkins[newSpriteIndex];
+            characterImage1.sprite = characterSkins[newSkinIndex];
         }
         if (clientId == 2)
         {
-            characterImage2.sprite = characterSkins[newSpriteIndex];
+            characterImage2.sprite = characterSkins[newSkinIndex];
         }
     }
 
-    private void ConfirmSkin()
+    private void OnConfirmSkin()
     {
         foreach (var confirmedSkinIndex in confirmedSkins)
         {
-            if (currentSpriteIndex == confirmedSkinIndex)
+            if (currentSkinIndex == confirmedSkinIndex)
             {
                 playerLog.text += "This skin has been chosen,change one!" + "\n";
                 return;
             }
         }
-        currentCharacter.color = Color.white;
+
         switchButton.interactable = false;
         confirmButton.interactable = false;
         
-        player.skinIndex = currentSpriteIndex;
+        player.skinIndex = currentSkinIndex;
         
-        CmdConfirmSkin(currentSpriteIndex,clientId);
+        CmdConfirmSkin(currentSkinIndex,clientId);
     }
 
     [Command] public void CmdConfirmSkin(int confirmedSkinIndex,int clientId)
     {
         RpcConfirmSkin(confirmedSkinIndex);
-        characterSelectionSingleton.OnPlayerConfirmed(clientId);
+        characterSelectionManager.OnPlayerConfirmed(clientId);
     }
 
     [ClientRpc] public void RpcConfirmSkin(int confirmedSkinIndex)
     { 
-        characterSelectionSingleton.confirmedSkins.Add(confirmedSkinIndex);
+        characterSelectionManager.confirmedSkins.Add(confirmedSkinIndex);
     }
 }

@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class CharacterSelectionSingleton : NetworkBehaviour
+public class CharacterSelectionManager : NetworkBehaviour
 {
-    public static CharacterSelectionSingleton Instance;
+    public static CharacterSelectionManager Instance;
     
     public GameObject serverControlButtons; // 服务器端的控制按钮组
     public GameObject buttonSet1; // 客户端1的按钮组
@@ -50,7 +50,7 @@ public class CharacterSelectionSingleton : NetworkBehaviour
         confirmCount++;
         serverLog.text += "Player " + clientId + " Confirmed." + "\n";
         
-        if (confirmCount >= maxPlayerCount) ;
+        if (confirmCount >= maxPlayerCount) 
         {
             enterGameButton.interactable = true; 
         }
