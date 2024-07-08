@@ -832,7 +832,6 @@ MonoBehaviour:
       CharacterImage: {fileID: 1888749999}
   enterGameButton: {fileID: 2002319064}
   serverLog: {fileID: 592056570}
-  maxPlayerCount: 2
   characterSkins:
   - {fileID: 21300000, guid: b1b19ddbbff8905488eb8448596e4d10, type: 3}
   - {fileID: 21300000, guid: 52805e95d7c7b9442b3923373aa2aa11, type: 3}

@@ -33,7 +33,7 @@ public class CharacterSelectionManager : NetworkBehaviour
     
     [SerializeField] private Button enterGameButton;
     [SerializeField] private TextMeshProUGUI serverLog;
-    [SerializeField] private int maxPlayerCount;
+    private int maxPlayerCount;
     
     public Sprite[] characterSkins;
     public List<int> confirmedSkins = new List<int>();
@@ -57,6 +57,8 @@ public class CharacterSelectionManager : NetworkBehaviour
         {
             playerComponetsDictionary.Add(playerComponet.clientId, playerComponet);
         }
+
+        maxPlayerCount = playerComponetsDictionary.Count;
     }
     
     public override void OnStartServer()
