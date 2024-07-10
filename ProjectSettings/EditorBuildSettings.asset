@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CharacterSelectionScene.unity
     guid: 0dbffc0f6a6fcf0458fecd7c0948444f
+  - enabled: 1
+    path: Assets/Scenes/CodesignScene.unity
+    guid: 6067a825fbf24734b87f32631e3cbb54
   m_configObjects: {}

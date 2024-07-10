@@ -15,14 +15,15 @@ public class CharacterSeletionPlayerComponets
 [System.Serializable]
 public class CharacterSeletionComponets
 {
-    public Button SwitchButton;
-    public Button ConfirmButton;
-    public Image CharacterImage;
+    public Button switchButton;
+    public Button confirmButton;
+    public Image characterImage; 
+    public Image avatarImage;
 }
 
 public class CharacterSelectionManager : NetworkBehaviour
 {
-    public static CharacterSelectionManager Instance;
+    public static CharacterSelectionManager instance;
     
     // 使用SerializedField来公开组的列表
     [SerializeField] private List<CharacterSeletionPlayerComponets> playerComponets = new List<CharacterSeletionPlayerComponets>();
@@ -36,6 +37,7 @@ public class CharacterSelectionManager : NetworkBehaviour
     private int maxPlayerCount;
     
     public Sprite[] characterSkins;
+    public Sprite[] avatarSkins;
     public List<int> confirmedSkins = new List<int>();
     public int confirmCount;
     public TextMeshProUGUI playerLog;
@@ -43,9 +45,9 @@ public class CharacterSelectionManager : NetworkBehaviour
     
     private void Awake()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this; 
+            instance = this; 
         }
         else
         {
@@ -65,6 +67,8 @@ public class CharacterSelectionManager : NetworkBehaviour
     {
         serverLog.gameObject.SetActive(true); 
         enterGameButton.gameObject.SetActive(true);
+        
+        enterGameButton.onClick.AddListener(CodesignStart);
     }
     
     public override void OnStartClient() // 每个客户端在进入场景后独立调用一次该方法，类似于 Start，本地调用，本地执行
@@ -81,5 +85,11 @@ public class CharacterSelectionManager : NetworkBehaviour
         {
             enterGameButton.interactable = true; 
         }
+    }
+    
+    [Server] private void CodesignStart()
+    {
+        // 跳场景
+        NetworkManager.singleton.ServerChangeScene("CodesignScene");
     }
 }
