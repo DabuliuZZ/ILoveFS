@@ -78,8 +78,6 @@ public class CustomNetworkManager : NetworkManager
     }
     private IEnumerator AddComponentsForAllPlayersCoroutine(System.Type[] componentTypes)
     {
-        yield return new WaitForSeconds(0.5f);
-
         foreach (var player in FindObjectsOfType<Player>())
         {
             Debug.Log(player + " " + player.isLocalPlayer);
@@ -91,5 +89,6 @@ public class CustomNetworkManager : NetworkManager
                 }
             }
         }
+        yield return null;
     }
 }

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
+using TMPro;
 
 public class PlayerCodesign : NetworkBehaviour
 {
@@ -16,7 +18,7 @@ public class PlayerCodesign : NetworkBehaviour
     private Sprite[] avatarSkins;
     private int skinIndex;
     private Image avatarImage;
-    public Animator avatarAnimator;
+    private Animator avatarAnimator;
     private Transform pos1;
     private Transform player1Obj;
     private Transform selfPos;
@@ -24,9 +26,13 @@ public class PlayerCodesign : NetworkBehaviour
     
     //————————————————————————————————————————————————
     
-    private GameObject questionCard;
+    private GameObject questionCardBack;
+    private GameObject questionCardFace;
     private Animator questionCardAnimator;
     private Button questionCardButton;
+    private Animator stickyNotesAnimator;
+    private TMP_InputField stickyNote1InputField;
+    private TMP_InputField stickyNote2InputField;
     
     //————————————————————————————————————————————————
     
@@ -40,7 +46,8 @@ public class PlayerCodesign : NetworkBehaviour
     
     private Animator hostAnimator;
     private float hostThrowCardAnimTime;
-    private float cardDeliverTime;
+    private float cardDeliverAnimTime;
+    private float dropStickyAnimTime;
     
     private void OnEnable()
     {
@@ -62,10 +69,11 @@ public class PlayerCodesign : NetworkBehaviour
         diceButton = dice.GetComponent<Button>();
         diceAnimTime = codesignManager.diceAnimTime;
         
-        //——————————————————————————————————————————————————
+        //————————————————————————————————————————————————————
         
         hostThrowCardAnimTime = codesignManager.hostThrowCardAnimTime;
-        cardDeliverTime = codesignManager.cardDeliverTime;
+        cardDeliverAnimTime = codesignManager.cardDeliverAnimTime;
+        dropStickyAnimTime = codesignManager.dropStickyNotesAnimTime;
         
         //————————————————————————————————————————————————————
         
@@ -78,14 +86,18 @@ public class PlayerCodesign : NetworkBehaviour
                 selfPos = playerComponents.Componets.selfPos;
                 selfPlayerObj = playerComponents.Componets.selfPlayerObj;
 
-                questionCard = playerComponents.Componets.qustionCard;
+                questionCardBack = playerComponents.Componets.questionCardBack;
+                questionCardFace = playerComponents.Componets.questionCardFace;
+                stickyNotesAnimator = playerComponents.Componets.StickyNotesAnimator;
+                stickyNote1InputField = playerComponents.Componets.stickyNote1InputField;
+                stickyNote2InputField = playerComponents.Componets.stickyNote2InputField;
                 
                 diceAnimName = playerComponents.Componets.diceAnimName;
             }
 
             diceButton.onClick.AddListener(RollDiceAnim);
-            questionCardAnimator = questionCard.GetComponent<Animator>();
-            questionCardButton = questionCard.GetComponent<Button>();
+            questionCardAnimator = questionCardBack.GetComponent<Animator>();
+            questionCardButton = questionCardBack.GetComponent<Button>();
             
             if (clientId != 1)
             {
@@ -137,18 +149,62 @@ public class PlayerCodesign : NetworkBehaviour
         Debug.Log("questionCardAnimator play CardDrop");
         questionCardAnimator.Play("CardDrop");
         
-        Invoke("QuestionCardAddListener",cardDeliverTime);
+        Invoke("QuestionCardAddListener",cardDeliverAnimTime);
     }
     
     void QuestionCardAddListener()
     {
         questionCardButton.interactable = true;
-        questionCardButton.onClick.AddListener(RemoveDice);
+        questionCardButton.onClick.AddListener(OnCardClick);
     }
     
-    void RemoveDice()
+    void OnCardClick()
     {
         questionCardButton.interactable = false;
+        
         diceAnimator.Play("RemoveDice");
+        
+        // 第一阶段：将卡牌背面翻转至90°
+        questionCardBack.transform.DORotate(new Vector3(0, 90, 0), 0.5f).OnComplete(() =>
+        {
+            // 完成第一阶段翻转后，背面失活，正面激活
+            questionCardBack.SetActive(false);
+            questionCardFace.SetActive(true);
+
+            // 第二阶段：将卡牌正面从90°翻转至0°
+            questionCardFace.transform.DORotate(new Vector3(0, 0, 0), 0.5f);
+        });
+        
+        stickyNotesAnimator.Play("DropStickyNotes");
+        
+        Invoke("ActiveInputField",dropStickyAnimTime);
+    }
+
+    void ActiveInputField()
+    {
+        stickyNote1InputField.interactable = true;
+        stickyNote2InputField.interactable = true;
+    }
+    
+    public void InActiveInputField()
+    {
+        stickyNote1InputField.interactable = false;
+        stickyNote2InputField.interactable = false;
+    }
+
+    public void OnStartPitchButtonClicked()
+    {
+        CmdStickyNotesInputSubmit(stickyNote1InputField.text,stickyNote2InputField.text);
+    }
+
+    [Command] public void CmdStickyNotesInputSubmit(string stickyNote1Text, string stickyNote2Text)
+    {
+        RpcStickyNotesInputSubmit(stickyNote1Text,stickyNote2Text);
+    }
+    
+    [ClientRpc] public void RpcStickyNotesInputSubmit(string stickyNote1Text, string stickyNote2Text)
+    {
+        player.stickyNote1Text = stickyNote1Text;
+        player.stickyNote2Text = stickyNote2Text;
     }
 }

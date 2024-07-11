@@ -118,8 +118,7 @@ public class PlayerButton : NetworkBehaviour
         characterSelectionManager.OnPlayerConfirmed(clientId);
     }
 
-    [ClientRpc]
-    public void RpcConfirmSkin(int confirmedSkinIndex)
+    [ClientRpc] public void RpcConfirmSkin(int confirmedSkinIndex)
     {
         characterSelectionManager.confirmedSkins.Add(confirmedSkinIndex);
         player.skinIndex = confirmedSkinIndex;
