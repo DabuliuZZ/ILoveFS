@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using Mirror;
 using TMPro;
 using UnityEngine;
@@ -64,6 +66,20 @@ public class CodesignManager : NetworkBehaviour
     public float cardDeliverAnimTime;
     public float dropStickyNotesAnimTime;
     
+    //————————————————————————————————————————————————————
+
+
+
+    public Image giftPref;
+
+    public DisplayingPlayer currentDisplayingPlayer;
+
+    public StateType currentState;
+
+    public Canvas canvas;
+    
+    //————————————————————————————————————————————————————
+    
     private void Awake()
     {
         if (instance == null)
@@ -94,10 +110,68 @@ public class CodesignManager : NetworkBehaviour
         startPitchButton.onClick.AddListener(StartPitch);
         pitchButton.onClick.AddListener(Pitch); 
     }
+
+    public void ChangeState(StateType stateType)
+    {
+        currentState = stateType;
+    }
     
     public override void OnStartClient() // 每个客户端在进入场景后独立调用一次该方法，类似于 Start，本地调用，本地执行
     {
         CustomNetworkManager.instance.AddComponentsForAllPlayers(typeof(PlayerCodesign));
+
+        foreach (var gift in AssetsLoader.instance.gifts)
+        {
+            gift.btn.onClick.AddListener(()=>
+            {
+                OnGiftClicked(gift.giftType);
+                if (currentState == StateType.Pitching)
+                {
+                    foreach (var gift in AssetsLoader.instance.gifts)
+                    {
+                        gift.btn.interactable = false;
+                    }
+                }
+            });
+        }
+    }
+
+    [Command(requiresAuthority = false)]public void OnGiftClicked(GiftType giftType)
+    {
+        RpcOnGiftClicked(giftType);
+        
+                
+
+    }
+    
+    
+    [ClientRpc] public void RpcOnGiftClicked(GiftType id)
+    {
+        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+
+        // 在Canvas范围内生成随机位置
+        float randomX = Random.Range( 0,canvasRect.rect.width);
+        float randomY = Random.Range(0,canvasRect.rect.height / 2);
+        
+        // 生成物体在随机的世界坐标位置
+        var image = Instantiate<Image>(giftPref, canvas.transform);
+        
+        // 设置新生成对象的RectTransform位置
+        RectTransform rectTransform = image.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector2(randomX, randomY);
+
+        image.sprite = AssetsLoader.instance.gifts.First(item => item.giftType == id).giftSprite;
+        
+        Sequence sequence = DOTween.Sequence();
+
+        sequence.Append(image.DOColor(Color.clear, 2).OnComplete(() => Destroy(image.gameObject)));
+        sequence.Join(image.rectTransform.DOMoveY(image.rectTransform.anchoredPosition.y + 5f, 1.5f));
+
+        if (currentState == StateType.Pitching)
+        {
+            currentDisplayingPlayer.AddGift(id);
+        }
+        
     }
     
     [Command(requiresAuthority = false)] public void RollDiceStart()
@@ -183,6 +257,18 @@ public class CodesignManager : NetworkBehaviour
                     break;
                 }
             }
+            
+            foreach (var gift in AssetsLoader.instance.gifts)
+            {
+                gift.btn.interactable = true;
+            }
+
+            currentDisplayingPlayer = AssetsLoader.instance.GetPlayer(clientId);
+            
+            ChangeState(StateType.Pitching);
         }
     }
+
+
 }
+
