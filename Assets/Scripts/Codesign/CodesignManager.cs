@@ -52,6 +52,7 @@ public class CodesignManager : NetworkBehaviour
     [SerializeField] private Button offDiceButton;
     [SerializeField] private Button startPitchButton;
     [SerializeField] private Button pitchButton;
+    [SerializeField] private Button endButton;
     
     //——————————————————————————————————————————————————
 
@@ -77,6 +78,8 @@ public class CodesignManager : NetworkBehaviour
     public StateType currentState;
 
     public Canvas canvas;
+
+    public GameObject giftPanel;
     
     //————————————————————————————————————————————————————
     
@@ -104,12 +107,15 @@ public class CodesignManager : NetworkBehaviour
         offDiceButton.gameObject.SetActive(true);
         startPitchButton.gameObject.SetActive(true);
         pitchButton.gameObject.SetActive(true);
+        endButton.gameObject.SetActive(true);
         
         rollDiceButton.onClick.AddListener(RollDiceStart);
         offDiceButton.onClick.AddListener(OffDice);
         startPitchButton.onClick.AddListener(StartPitch);
         pitchButton.onClick.AddListener(Pitch); 
+        endButton.onClick.AddListener(End);
     }
+
 
     public void ChangeState(StateType stateType)
     {
@@ -165,7 +171,7 @@ public class CodesignManager : NetworkBehaviour
         Sequence sequence = DOTween.Sequence();
 
         sequence.Append(image.DOColor(Color.clear, 2).OnComplete(() => Destroy(image.gameObject)));
-        sequence.Join(image.rectTransform.DOMoveY(image.rectTransform.anchoredPosition.y + 5f, 1.5f));
+        sequence.Join(image.rectTransform.DOMoveY(image.rectTransform.anchoredPosition.y + 20f, 1.5f));
 
         if (currentState == StateType.Pitching)
         {
@@ -201,7 +207,9 @@ public class CodesignManager : NetworkBehaviour
         {
             if (player.isLocalPlayer && player.clientId != 0)
             {
-                player.GetComponent<PlayerCodesign>().OnStartPitchButtonClicked();
+                var playercod = player.GetComponent<PlayerCodesign>();
+                playercod.OnStartPitchButtonClicked();
+                playercod.DisableCards();
             }
         }
         
@@ -210,7 +218,10 @@ public class CodesignManager : NetworkBehaviour
         {
             Input.interactable = false;
         }
+        
+        giftPanel.SetActive(true);
     }
+    
     
     [Command(requiresAuthority = false)] public void Pitch()
     {
@@ -220,6 +231,9 @@ public class CodesignManager : NetworkBehaviour
             currentPlayerIndex++;
         }
     }
+
+    private GameObject cardFaceCopy;
+    private GameObject stickyNoteCopy;
 
     [ClientRpc] public void RpcPitchButtonPressed(int clientId, int index)
     {
@@ -232,9 +246,12 @@ public class CodesignManager : NetworkBehaviour
             // 获取Canvas对象
             Canvas canvas = FindObjectOfType<Canvas>();
             
+            if(cardFaceCopy!= null) Destroy(cardFaceCopy);
+            if(stickyNoteCopy!= null) Destroy(stickyNoteCopy);
+            
             // 创建卡片和便签的实例
-            var cardFaceCopy = Instantiate(cardFace, pitchCardPos[index].position, Quaternion.identity, canvas.transform);
-            var stickyNoteCopy = Instantiate(stickyNotes, pitchNotesPos[index].position, Quaternion.identity,canvas.transform);
+            cardFaceCopy = Instantiate(cardFace, pitchCardPos[index].position, Quaternion.identity, canvas.transform);
+            stickyNoteCopy = Instantiate(stickyNotes, pitchNotesPos[index].position, Quaternion.identity,canvas.transform);
 
             stickyNoteCopy.GetComponent<Animator>().Play("Empty");
             
@@ -254,7 +271,22 @@ public class CodesignManager : NetworkBehaviour
                 {
                     stickyNote1InputField.text = player.stickyNote1Text;
                     stickyNote2InputField.text = player.stickyNote2Text;
-                    break;
+                    
+                    if (player.isLocalPlayer&&player.clientId != 0)
+                    {
+                        giftPanel.SetActive(false);
+                        player.GetComponent<PlayerCodesign>().EnableCards();
+                    }
+                    
+                }
+                else
+                {
+
+                    if (player.isLocalPlayer&&player.clientId != 0)
+                    {
+                        giftPanel.SetActive(true);
+                        player.GetComponent<PlayerCodesign>().DisableCards();
+                    }
                 }
             }
             
@@ -267,8 +299,76 @@ public class CodesignManager : NetworkBehaviour
             
             ChangeState(StateType.Pitching);
         }
+
+    }
+    [Command(requiresAuthority = false)]private void End()
+    {
+        var player=AssetsLoader.instance.displayingPlayers.OrderByDescending(player => player.score).FirstOrDefault();
+        if(player!=null) RpcEnd(player.id);
     }
 
+    [ClientRpc]
+    private void RpcEnd(int clientId)
+    {
+        if (playerComponetsDictionary.TryGetValue(clientId, out var playerComponents))
+        {
+            // 获取玩家的特定对象
+            var cardFace = playerComponents.Componets.questionCardFace;
+            var stickyNotes = playerComponents.Componets.StickyNotesAnimator.gameObject;
+
+            // 获取Canvas对象
+            Canvas canvas = FindObjectOfType<Canvas>();
+            
+            if(cardFaceCopy!= null) Destroy(cardFaceCopy);
+            if(stickyNoteCopy!= null) Destroy(stickyNoteCopy);
+            
+            // 创建卡片和便签的实例
+            cardFaceCopy = Instantiate(cardFace, pitchCardPos[clientId-1].position, Quaternion.identity, canvas.transform);
+            stickyNoteCopy = Instantiate(stickyNotes, pitchNotesPos[clientId-1].position, Quaternion.identity,canvas.transform);
+
+            stickyNoteCopy.GetComponent<Animator>().Play("Empty");
+            
+            // 激活复制体
+            cardFaceCopy.SetActive(true);
+            stickyNoteCopy.SetActive(true);
+
+            // 使用索引查找子级对象
+            var stickyNote1InputField = stickyNoteCopy.transform.GetChild(0).GetComponent<TMP_InputField>();
+            var stickyNote2InputField = stickyNoteCopy.transform.GetChild(1).GetComponent<TMP_InputField>();
+            
+            // 查找对应clientId的Player实例
+            Player[] players = FindObjectsOfType<Player>();
+            foreach (var player in players)
+            {
+                if (player.clientId == clientId)
+                {
+                    stickyNote1InputField.text = player.stickyNote1Text;
+                    stickyNote2InputField.text = player.stickyNote2Text;
+                    
+                    if (player.isLocalPlayer&&player.clientId != 0)
+                    {
+                        giftPanel.SetActive(false);
+                        player.GetComponent<PlayerCodesign>().EnableCards();
+                    }
+                    
+                }
+                else
+                {
+
+                    if (player.isLocalPlayer&&player.clientId != 0)
+                    {
+                        giftPanel.SetActive(true);
+                        player.GetComponent<PlayerCodesign>().DisableCards();
+                    }
+                }
+            }
+            foreach (var gift in AssetsLoader.instance.gifts)
+            {
+                gift.btn.interactable = true;
+            }
+            ChangeState(StateType.End);
+        }
+    }
 
 }
 

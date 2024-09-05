@@ -16,6 +16,13 @@ public class PlayerScorePanel : MonoBehaviour
     public Image giftPrefab;
     public List<Gift> gifts = new List<Gift>();
 
+    public void Start()
+    {
+        scoreUp.text = "0";
+        scoreDown.text = "0";
+        totalScore.text = "";
+    }
+
     public void UpdateScoreUp(int score)
     {
         scoreUp.text = "+" + score;

@@ -58,7 +58,7 @@ public class DisplayingPlayer
         {
             scoreUp+= gift.score;
         }
-        else
+        else if(gift.score < 0)
         {
             scoreDown+= gift.score;
         }

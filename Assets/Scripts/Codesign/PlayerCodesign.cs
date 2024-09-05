@@ -207,4 +207,19 @@ public class PlayerCodesign : NetworkBehaviour
         player.stickyNote1Text = stickyNote1Text;
         player.stickyNote2Text = stickyNote2Text;
     }
+
+    public void DisableCards()
+    {
+        questionCardFace.SetActive(false);
+        questionCardBack.SetActive(false);
+        stickyNote1InputField.gameObject.SetActive(false);
+        stickyNote2InputField.gameObject.SetActive(false);
+    }
+    public void EnableCards()
+    {
+        questionCardFace.SetActive(true);
+        questionCardBack.SetActive(true);
+        stickyNote1InputField.gameObject.SetActive(true);
+        stickyNote2InputField.gameObject.SetActive(true);
+    }
 }
