@@ -30,7 +30,7 @@ public class PlayerScorePanel : MonoBehaviour
 
     public void UpdateScoreDown(int score)
     {
-        scoreDown.text = "+" + score;
+        scoreDown.text = "-" + score;
     }
 
     public void UpdateTotalScore(int score)
