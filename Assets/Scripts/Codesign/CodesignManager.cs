@@ -34,6 +34,12 @@ public class CodesignManager : NetworkBehaviour
 {
     public static CodesignManager instance;
     
+    //——————————————————————————————————————————————————
+    
+    public Animator monkeyAnimator;
+
+    //——————————————————————————————————————————————————
+    
     // 使用SerializedField来公开组的列表
     [SerializeField] private List<CodesignPlayerComponets> playerComponets = new List<CodesignPlayerComponets>();
     // 创建一个字典来存储整数键与组的关联
@@ -45,7 +51,7 @@ public class CodesignManager : NetworkBehaviour
     public Transform pos1;
     public Transform player1Obj;
     
-    //——————————————————————————————————————————————————
+    //————————————————————————————————————————————————————
     
     public GameObject dice;
     [SerializeField] private Button rollDiceButton;
@@ -75,12 +81,6 @@ public class CodesignManager : NetworkBehaviour
     public Canvas canvas;
     public GameObject giftPanel;
     
-    //————————————————————————————————————————————————————
-
-    public Animator monkeyAnimator;
-    
-    //————————————————————————————————————————————————————
-
     private void Awake()
     {
         if (instance == null)
@@ -113,8 +113,7 @@ public class CodesignManager : NetworkBehaviour
         pitchButton.onClick.AddListener(Pitch); 
         endButton.onClick.AddListener(End);
     }
-
-
+    
     public void ChangeState(StateType stateType)
     {
         currentState = stateType;
