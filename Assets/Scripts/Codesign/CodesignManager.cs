@@ -37,6 +37,9 @@ public class CodesignManager : NetworkBehaviour
     //——————————————————————————————————————————————————
     
     public Animator monkeyAnimator;
+    
+    // 白板素材引用
+    // 角色演讲皮肤Animator引用
 
     //——————————————————————————————————————————————————
     
@@ -48,6 +51,9 @@ public class CodesignManager : NetworkBehaviour
     //——————————————————————————————————————————————————
     
     public Sprite[] avatarSkins;
+    
+    // 角色演讲皮肤动画名列表，string
+    
     public Transform pos1;
     public Transform player1Obj;
     
@@ -239,23 +245,46 @@ public class CodesignManager : NetworkBehaviour
             // 获取Canvas对象
             Canvas canvas = FindObjectOfType<Canvas>();
             
+            //————————————————————————————————————————————————————————————————————
+            // 如果上一轮有玩家展示（问题卡与答题卡不为空）
+
+            // 问题卡与答题卡淡出后销毁（下方销毁代码需修改）
             if(cardFaceCopy!= null) Destroy(cardFaceCopy);
             if(stickyNoteCopy!= null) Destroy(stickyNoteCopy);
+            
+            // 角色演讲皮肤GameObject淡出
+            
+            //————————————————————————————————————————————————————————————————————
+            // 如果上一轮没有玩家展示（问题卡与答题卡为空）
+            
+            // 猴子淡出后失活
+            // 白板素材激活后淡入
+            // 角色演讲皮肤GameObject激活
+            
+            //——————————————————————————————————————————————————————————————————————
+            // 正常流程
+            
+            // 查找对应clientId的Player实例
+            // 从player脚本处拿到skinIndex，获取角色演讲皮肤动画名
+            // 角色演讲皮肤Animator播对应动画
+            // 角色演讲皮肤GameObject淡入
             
             // 创建卡片和便签的实例
             cardFaceCopy = Instantiate(cardFace, pitchCardPos[index].position, Quaternion.identity, canvas.transform);
             stickyNoteCopy = Instantiate(stickyNotes, pitchNotesPos[index].position, Quaternion.identity,canvas.transform);
 
             stickyNoteCopy.GetComponent<Animator>().Play("Empty");
-            
-            // 激活复制体
+
+            // 问题卡与答题卡激活后淡入（下方激活代码需修改）
             cardFaceCopy.SetActive(true);
             stickyNoteCopy.SetActive(true);
-
+            
+            //——————————————————————————————————————————————————————————
+            
             // 使用索引查找子级对象
             var stickyNote1InputField = stickyNoteCopy.transform.GetChild(0).GetComponent<TMP_InputField>();
             var stickyNote2InputField = stickyNoteCopy.transform.GetChild(1).GetComponent<TMP_InputField>();
-            
+                        
             // 查找对应clientId的Player实例
             Player[] players = FindObjectsOfType<Player>();
             foreach (var player in players)
