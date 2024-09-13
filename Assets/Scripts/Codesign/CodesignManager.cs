@@ -68,21 +68,19 @@ public class CodesignManager : NetworkBehaviour
     public float dropStickyNotesAnimTime;
     
     //————————————————————————————————————————————————————
-
-
-
+    
     public Image giftPref;
-
     public DisplayingPlayer currentDisplayingPlayer;
-
     public StateType currentState;
-
     public Canvas canvas;
-
     public GameObject giftPanel;
     
     //————————————————————————————————————————————————————
+
+    public Animator monkeyAnimator;
     
+    //————————————————————————————————————————————————————
+
     private void Awake()
     {
         if (instance == null)
@@ -145,11 +143,7 @@ public class CodesignManager : NetworkBehaviour
     [Command(requiresAuthority = false)]public void OnGiftClicked(GiftType giftType)
     {
         RpcOnGiftClicked(giftType);
-        
-                
-
     }
-    
     
     [ClientRpc] public void RpcOnGiftClicked(GiftType id)
     {
@@ -276,12 +270,11 @@ public class CodesignManager : NetworkBehaviour
                     {
                         giftPanel.SetActive(false);
                         player.GetComponent<PlayerCodesign>().EnableCards();
+                        player.GetComponent<PlayerCodesign>().InActiveInputField();
                     }
-                    
                 }
                 else
                 {
-
                     if (player.isLocalPlayer&&player.clientId != 0)
                     {
                         giftPanel.SetActive(true);

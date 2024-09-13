@@ -49,6 +49,12 @@ public class PlayerCodesign : NetworkBehaviour
     private float cardDeliverAnimTime;
     private float dropStickyAnimTime;
     
+    //————————————————————————————————————————————————
+
+    private Animator monkeyAnimator;
+    
+    //————————————————————————————————————————————————
+    
     private void OnEnable()
     {
         player = GetComponent<Player>();
@@ -76,7 +82,11 @@ public class PlayerCodesign : NetworkBehaviour
         dropStickyAnimTime = codesignManager.dropStickyNotesAnimTime;
         
         //————————————————————————————————————————————————————
+
+        monkeyAnimator = codesignManager.monkeyAnimator;
         
+        //————————————————————————————————————————————————————
+
         if (player.isLocalPlayer && clientId != 0)
         {
             if (codesignManager.playerComponetsDictionary.TryGetValue(clientId, out var playerComponents))
@@ -130,8 +140,8 @@ public class PlayerCodesign : NetworkBehaviour
         
         Debug.Log("diceAnimator play " + diceAnimName);
         Debug.Log("avatar play AvatarRollDice");
-        //diceAnimator.Play(diceAnimName);
-        //avatarAnimator.Play("AvatarRollDice");
+        //diceAnimator.Play(diceAnimName);  
+        // 随机播个骰子动画，六选一
         
         Invoke("HostThrowCardDeliver",diceAnimTime);
     }
@@ -139,7 +149,8 @@ public class PlayerCodesign : NetworkBehaviour
     void HostThrowCardDeliver()
     {
         Debug.Log("hostAnimator play CardDeliver");
-        //hostAnimator.Play("CardDeliver");
+        
+        monkeyAnimator.Play("DrawCard1");
         
         Invoke("CardDeliver",hostThrowCardAnimTime);
     }
@@ -148,6 +159,7 @@ public class PlayerCodesign : NetworkBehaviour
     {
         Debug.Log("questionCardAnimator play CardDrop");
         questionCardAnimator.Play("CardDrop");
+        monkeyAnimator.Play("DrawCard2");
         
         Invoke("QuestionCardAddListener",cardDeliverAnimTime);
     }
@@ -161,6 +173,8 @@ public class PlayerCodesign : NetworkBehaviour
     void OnCardClick()
     {
         questionCardButton.interactable = false;
+        
+        monkeyAnimator.Play("PlayHead");
         
         diceAnimator.Play("RemoveDice");
         
