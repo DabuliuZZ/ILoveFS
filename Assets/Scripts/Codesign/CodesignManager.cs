@@ -255,7 +255,7 @@ public class CodesignManager : NetworkBehaviour
             // 角色演讲皮肤GameObject淡出
             
             //————————————————————————————————————————————————————————————————————
-            // 如果上一轮没有玩家展示（问题卡与答题卡为空）
+            // 如果上一轮没有玩家展示，第一次点击（问题卡与答题卡为空）
             
             // 猴子淡出后失活
             // 白板素材激活后淡入
@@ -264,7 +264,7 @@ public class CodesignManager : NetworkBehaviour
             //——————————————————————————————————————————————————————————————————————
             // 正常流程
             
-            // 查找对应clientId的Player实例
+            // 查找对应传入clientId的Player实例
             // 从player脚本处拿到skinIndex，获取角色演讲皮肤动画名
             // 角色演讲皮肤Animator播对应动画
             // 角色演讲皮肤GameObject淡入
@@ -285,7 +285,7 @@ public class CodesignManager : NetworkBehaviour
             var stickyNote1InputField = stickyNoteCopy.transform.GetChild(0).GetComponent<TMP_InputField>();
             var stickyNote2InputField = stickyNoteCopy.transform.GetChild(1).GetComponent<TMP_InputField>();
                         
-            // 查找对应clientId的Player实例
+            // 查找对应传入clientId的Player实例
             Player[] players = FindObjectsOfType<Player>();
             foreach (var player in players)
             {
