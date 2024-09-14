@@ -1,11 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Mirror;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 
 [System.Serializable]
@@ -39,8 +40,10 @@ public class CodesignManager : NetworkBehaviour
     public Animator monkeyAnimator;
     
     // 白板素材引用
+    public GameObject whiteBoard;
     // 角色演讲皮肤Animator引用
-
+    public Animator characterAnimator;
+    
     //——————————————————————————————————————————————————
     
     // 使用SerializedField来公开组的列表
@@ -53,6 +56,7 @@ public class CodesignManager : NetworkBehaviour
     public Sprite[] avatarSkins;
     
     // 角色演讲皮肤动画名列表，string
+    public string[] characterAnimNames;
     
     public Transform pos1;
     public Transform player1Obj;
@@ -201,6 +205,15 @@ public class CodesignManager : NetworkBehaviour
     
     [ClientRpc] public void RpcStartPitch()
     {
+        // 猴子淡出后失活
+        monkeyAnimator.GetComponent<Image>().DOFade(0, 1f).OnComplete(() =>
+        {
+            monkeyAnimator.gameObject.SetActive(false);
+
+            // 白板素材淡入
+            whiteBoard.GetComponent<Image>().DOFade(1, 1f).OnComplete(() => { });
+        });
+        
         Player[] players = FindObjectsOfType<Player>();
         foreach (var player in players)
         {
@@ -244,47 +257,68 @@ public class CodesignManager : NetworkBehaviour
 
             // 获取Canvas对象
             Canvas canvas = FindObjectOfType<Canvas>();
-            
+
             //————————————————————————————————————————————————————————————————————
             // 如果上一轮有玩家展示（问题卡与答题卡不为空）
+            if (cardFaceCopy != null && stickyNoteCopy != null)
+            {
+                // 问题卡和答题卡淡出后销毁
+                stickyNoteCopy.GetComponent<Image>().DOFade(0, 1f);
+                cardFaceCopy.GetComponent<Image>().DOFade(0, 1f).OnComplete(() =>
+                {
+                    Destroy(stickyNoteCopy);
+                    Destroy(cardFaceCopy);
+                    
+                    // 角色演讲皮肤GameObject淡出
+                    characterAnimator.GetComponent<Image>().DOFade(0, 1f).OnComplete(() => { });
+                });
+            }
 
-            // 问题卡与答题卡淡出后销毁（下方销毁代码需修改）
-            if(cardFaceCopy!= null) Destroy(cardFaceCopy);
-            if(stickyNoteCopy!= null) Destroy(stickyNoteCopy);
-            
-            // 角色演讲皮肤GameObject淡出
-            
-            //————————————————————————————————————————————————————————————————————
-            // 如果上一轮没有玩家展示，第一次点击（问题卡与答题卡为空）
-            
-            // 猴子淡出后失活
-            // 白板素材激活后淡入
-            // 角色演讲皮肤GameObject激活
-            
             //——————————————————————————————————————————————————————————————————————
             // 正常流程
             
             // 查找对应传入clientId的Player实例
-            // 从player脚本处拿到skinIndex，获取角色演讲皮肤动画名
-            // 角色演讲皮肤Animator播对应动画
-            // 角色演讲皮肤GameObject淡入
+            Player[] playerss = FindObjectsOfType<Player>();
+            foreach (var player in playerss)
+            {
+                // 从player脚本处拿到skinIndex，获取角色演讲皮肤动画名
+                if (player.clientId == clientId)
+                {
+                    string characterAnimName = characterAnimNames[player.skinIndex];
+
+                    // 角色演讲皮肤Animator播对应动画
+                    characterAnimator.Play(characterAnimName);
+
+                    // 角色演讲皮肤GameObject淡入
+                    characterAnimator.GetComponent<Image>().DOFade(1, 1f).OnComplete(() => { });
+                }
+            }
             
             // 创建卡片和便签的实例
-            cardFaceCopy = Instantiate(cardFace, pitchCardPos[index].position, Quaternion.identity, canvas.transform);
-            stickyNoteCopy = Instantiate(stickyNotes, pitchNotesPos[index].position, Quaternion.identity,canvas.transform);
-
+            cardFaceCopy = Instantiate(cardFace, pitchCardPos[index].position, Quaternion.identity,
+                    canvas.transform);
+            stickyNoteCopy = Instantiate(stickyNotes, pitchNotesPos[index].position, Quaternion.identity,
+                    canvas.transform);
             stickyNoteCopy.GetComponent<Animator>().Play("Empty");
 
-            // 问题卡与答题卡激活后淡入（下方激活代码需修改）
+            // 问题卡与答题卡激活后淡入
             cardFaceCopy.SetActive(true);
             stickyNoteCopy.SetActive(true);
+            var cardFaceCopyImage = cardFaceCopy.GetComponent<Image>();
+            var stickyNoteCopyImage = stickyNoteCopy.GetComponent<Image>();             
             
+            cardFaceCopyImage.color = new Color(255,255,255,0);
+            cardFaceCopyImage.DOFade(1, 1f);
+
+            stickyNoteCopyImage.color = new Color(255,255,255,0);
+            stickyNoteCopyImage.DOFade(1, 1f);
+
             //——————————————————————————————————————————————————————————
-            
+
             // 使用索引查找子级对象
             var stickyNote1InputField = stickyNoteCopy.transform.GetChild(0).GetComponent<TMP_InputField>();
             var stickyNote2InputField = stickyNoteCopy.transform.GetChild(1).GetComponent<TMP_InputField>();
-                        
+
             // 查找对应传入clientId的Player实例
             Player[] players = FindObjectsOfType<Player>();
             foreach (var player in players)
@@ -293,35 +327,35 @@ public class CodesignManager : NetworkBehaviour
                 {
                     stickyNote1InputField.text = player.stickyNote1Text;
                     stickyNote2InputField.text = player.stickyNote2Text;
-                    
-                    if (player.isLocalPlayer&&player.clientId != 0)
+
+                    if (player.isLocalPlayer && player.clientId != 0)
                     {
                         giftPanel.SetActive(false);
                         player.GetComponent<PlayerCodesign>().EnableCards();
                         player.GetComponent<PlayerCodesign>().InActiveInputField();
                     }
-                }
-                else
-                {
-                    if (player.isLocalPlayer&&player.clientId != 0)
+                    else
                     {
-                        giftPanel.SetActive(true);
-                        player.GetComponent<PlayerCodesign>().DisableCards();
+                        if (player.isLocalPlayer && player.clientId != 0)
+                        {
+                            giftPanel.SetActive(true);
+                            player.GetComponent<PlayerCodesign>().DisableCards();
+                        }
                     }
                 }
-            }
-            
-            foreach (var gift in AssetsLoader.instance.gifts)
-            {
-                gift.btn.interactable = true;
-            }
+                
+                foreach (var gift in AssetsLoader.instance.gifts)
+                {
+                    gift.btn.interactable = true;
+                }
 
-            currentDisplayingPlayer = AssetsLoader.instance.GetPlayer(clientId);
-            
-            ChangeState(StateType.Pitching);
+                currentDisplayingPlayer = AssetsLoader.instance.GetPlayer(clientId);
+
+                ChangeState(StateType.Pitching);
+            }
         }
-
     }
+        
     [Command(requiresAuthority = false)]private void End()
     {
         var player=AssetsLoader.instance.displayingPlayers.OrderByDescending(player => player.score).FirstOrDefault();
