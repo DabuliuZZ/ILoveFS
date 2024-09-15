@@ -63,7 +63,6 @@ public class PlayerScorePanel : MonoBehaviour
             target.giftNumText.text = "X"+target.num;
         }
     }
-    
 }
 
 [Serializable]
@@ -73,15 +72,21 @@ public class Gift
     public int score;
     public Sprite giftSprite;
     public Button btn;
-    
+    public int btnClickedCount;
     
     [HideInInspector]public int num;
     [HideInInspector]public TMP_Text giftNumText;
+    [HideInInspector]public int btnCurrentClickedCount;
 }
 
 public enum GiftType
 {
     Flower,
     Heart,
-    Shit
+    
+    Microphone,
+    Speaker,
+    
+    Shit,
+    Slippers,
 }

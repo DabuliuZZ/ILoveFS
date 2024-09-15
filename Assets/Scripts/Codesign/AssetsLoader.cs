@@ -65,4 +65,9 @@ public class DisplayingPlayer
         score = scoreUp + scoreDown;
         UpdateScorePanel();
     }
+    
+    public void AddGiftNoScore(GiftType giftType)
+    {
+        panel.AddGift(giftType);
+    }
 }
