@@ -82,5 +82,6 @@ public class Gift
 public enum GiftType
 {
     Flower,
+    Heart,
     Shit
 }

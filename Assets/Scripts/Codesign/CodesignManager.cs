@@ -1,6 +1,7 @@
-using System;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DG.Tweening;
 using Mirror;
 using TMPro;
@@ -137,7 +138,19 @@ public class CodesignManager : NetworkBehaviour
         {
             gift.btn.onClick.AddListener(()=>
             {
-                OnGiftClicked(gift.giftType);
+                int id = 0;
+                // 查找对应传入clientId的Player实例
+                Player[] playerss = FindObjectsOfType<Player>();
+                foreach (var player in playerss)
+                {
+                    // 从player脚本处拿到skinIndex，获取角色演讲皮肤动画名
+                    if (player.isLocalPlayer)
+                    {
+                        id = player.clientId;
+                    }
+                }
+                
+                OnGiftClicked(gift.giftType,id);
                 if (currentState == StateType.Pitching)
                 {
                     foreach (var gift in AssetsLoader.instance.gifts)
@@ -149,12 +162,15 @@ public class CodesignManager : NetworkBehaviour
         }
     }
 
-    [Command(requiresAuthority = false)]public void OnGiftClicked(GiftType giftType)
+    [Command(requiresAuthority = false)]public void OnGiftClicked(GiftType giftType,int id)
     {
-        RpcOnGiftClicked(giftType);
+        RpcOnGiftClicked(giftType,id);
     }
+
+    // 记录哪个玩家丢了哪个礼物
+    private Dictionary<int,GiftType> giftList = new();
     
-    [ClientRpc] public void RpcOnGiftClicked(GiftType id)
+    [ClientRpc] public void RpcOnGiftClicked(GiftType giftType,int id)
     {
         RectTransform canvasRect = canvas.GetComponent<RectTransform>();
 
@@ -169,7 +185,7 @@ public class CodesignManager : NetworkBehaviour
         RectTransform rectTransform = image.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = new Vector2(randomX, randomY);
 
-        image.sprite = AssetsLoader.instance.gifts.First(item => item.giftType == id).giftSprite;
+        image.sprite = AssetsLoader.instance.gifts.First(item => item.giftType == giftType).giftSprite;
         
         Sequence sequence = DOTween.Sequence();
 
@@ -178,9 +194,23 @@ public class CodesignManager : NetworkBehaviour
 
         if (currentState == StateType.Pitching)
         {
-            currentDisplayingPlayer.AddGift(id);
+            currentDisplayingPlayer.AddGift(giftType);
+            giftList.Add(id,giftType);
+            CheckGifts();
         }
         
+    }
+
+    // 检测礼物的特殊情况
+    public void CheckGifts()
+    {
+        // if (giftList.Count(giftkvp => giftkvp.Value == GiftType.Shit) > 2)
+        // {
+        //     foreach (var giftkvp in giftList.Where(giftkvp=>giftkvp.Value==GiftType.Shit))
+        //     {
+        //         AssetsLoader.instance.GetPlayer(giftkvp.Key).AddGift(GiftType.Flower);
+        //     }
+        // }
     }
     
     [Command(requiresAuthority = false)] public void RollDiceStart()
@@ -246,8 +276,14 @@ public class CodesignManager : NetworkBehaviour
 
     private GameObject cardFaceCopy;
     private GameObject stickyNoteCopy;
-
+    
     [ClientRpc] public void RpcPitchButtonPressed(int clientId, int index)
+    {
+        giftList.Clear();
+        RpcPitchButtonPressedUniTask(clientId, index);
+    }
+
+    public async UniTask RpcPitchButtonPressedUniTask(int clientId, int index)
     {
         if (playerComponetsDictionary.TryGetValue(clientId, out var playerComponents))
         {
@@ -257,21 +293,24 @@ public class CodesignManager : NetworkBehaviour
 
             // 获取Canvas对象
             Canvas canvas = FindObjectOfType<Canvas>();
-
+            
             //————————————————————————————————————————————————————————————————————
             // 如果上一轮有玩家展示（问题卡与答题卡不为空）
             if (cardFaceCopy != null && stickyNoteCopy != null)
             {
                 // 问题卡和答题卡淡出后销毁
-                stickyNoteCopy.GetComponent<Image>().DOFade(0, 1f);
-                cardFaceCopy.GetComponent<Image>().DOFade(0, 1f).OnComplete(() =>
-                {
-                    Destroy(stickyNoteCopy);
-                    Destroy(cardFaceCopy);
-                    
-                    // 角色演讲皮肤GameObject淡出
-                    characterAnimator.GetComponent<Image>().DOFade(0, 1f).OnComplete(() => { });
-                });
+                var stickyNote1ImageLast = stickyNoteCopy.transform.GetChild(0).GetComponent<Image>();
+                var stickyNote2ImageLast = stickyNoteCopy.transform.GetChild(1).GetComponent<Image>();
+                
+                await stickyNote1ImageLast.GetComponent<Image>().DOFade(0, 1f).AsyncWaitForCompletion();
+                await stickyNote2ImageLast.GetComponent<Image>().DOFade(0, 1f).AsyncWaitForCompletion();
+                Destroy(stickyNoteCopy);
+            
+                await cardFaceCopy.GetComponent<Image>().DOFade(0, 1f).AsyncWaitForCompletion();
+                Destroy(cardFaceCopy);
+                
+                // 角色演讲皮肤GameObject淡出
+                await characterAnimator.GetComponent<Image>().DOFade(0, 1f).AsyncWaitForCompletion();
             }
 
             //——————————————————————————————————————————————————————————————————————
@@ -290,7 +329,7 @@ public class CodesignManager : NetworkBehaviour
                     characterAnimator.Play(characterAnimName);
 
                     // 角色演讲皮肤GameObject淡入
-                    characterAnimator.GetComponent<Image>().DOFade(1, 1f).OnComplete(() => { });
+                    await characterAnimator.GetComponent<Image>().DOFade(1, 1f).AsyncWaitForCompletion();
                 }
             }
             
@@ -304,14 +343,22 @@ public class CodesignManager : NetworkBehaviour
             // 问题卡与答题卡激活后淡入
             cardFaceCopy.SetActive(true);
             stickyNoteCopy.SetActive(true);
+            
             var cardFaceCopyImage = cardFaceCopy.GetComponent<Image>();
-            var stickyNoteCopyImage = stickyNoteCopy.GetComponent<Image>();             
+            var stickyNote1Image = stickyNoteCopy.transform.GetChild(0).GetComponent<Image>();
+            var stickyNote2Image = stickyNoteCopy.transform.GetChild(1).GetComponent<Image>();     
+            
             
             cardFaceCopyImage.color = new Color(255,255,255,0);
             cardFaceCopyImage.DOFade(1, 1f);
 
-            stickyNoteCopyImage.color = new Color(255,255,255,0);
-            stickyNoteCopyImage.DOFade(1, 1f);
+            stickyNote1Image.color = new Color(255,255,255,0);
+            stickyNote1Image.gameObject.SetActive(true);
+            stickyNote1Image.DOFade(1, 1f);
+            
+            stickyNote2Image.color = new Color(255,255,255,0);
+            stickyNote2Image.gameObject.SetActive(true);
+            stickyNote2Image.DOFade(1, 1f);
 
             //——————————————————————————————————————————————————————————
 
@@ -334,16 +381,15 @@ public class CodesignManager : NetworkBehaviour
                         player.GetComponent<PlayerCodesign>().EnableCards();
                         player.GetComponent<PlayerCodesign>().InActiveInputField();
                     }
-                    else
+                }
+                else
+                {
+                    if (player.isLocalPlayer && player.clientId != 0)
                     {
-                        if (player.isLocalPlayer && player.clientId != 0)
-                        {
-                            giftPanel.SetActive(true);
-                            player.GetComponent<PlayerCodesign>().DisableCards();
-                        }
+                        giftPanel.SetActive(true);
+                        player.GetComponent<PlayerCodesign>().DisableCards();
                     }
                 }
-                
                 foreach (var gift in AssetsLoader.instance.gifts)
                 {
                     gift.btn.interactable = true;
@@ -355,7 +401,7 @@ public class CodesignManager : NetworkBehaviour
             }
         }
     }
-        
+    
     [Command(requiresAuthority = false)]private void End()
     {
         var player=AssetsLoader.instance.displayingPlayers.OrderByDescending(player => player.score).FirstOrDefault();
