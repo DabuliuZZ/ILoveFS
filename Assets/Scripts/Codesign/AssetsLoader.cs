@@ -65,6 +65,21 @@ public class DisplayingPlayer
         score = scoreUp + scoreDown;
         UpdateScorePanel();
     }
+
+    // public void UpdateScorePanel(GiftType giftType)
+    // {
+    //     var gift = AssetsLoader.instance.GetGift(giftType);
+    //     if (gift.score > 0)
+    //     {
+    //         scoreUp+= gift.score;
+    //     }
+    //     else if(gift.score < 0)
+    //     {
+    //         scoreDown+= gift.score;
+    //     }
+    //     score = scoreUp + scoreDown;
+    //     UpdateScorePanel();
+    // }
     
     public void AddGiftNoScore(GiftType giftType)
     {

@@ -76,7 +76,7 @@ public class Gift
     
     [HideInInspector]public int num;
     [HideInInspector]public TMP_Text giftNumText;
-    [HideInInspector]public int btnCurrentClickedCount;
+   
 }
 
 public enum GiftType

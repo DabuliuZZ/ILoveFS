@@ -90,6 +90,7 @@ public class CodesignManager : NetworkBehaviour
     
     public Image giftPref;
     public DisplayingPlayer currentDisplayingPlayer;
+    //public DisplayingPlayer currentPlayer;
     public StateType currentState;
     public Canvas canvas;
     public GameObject giftPanel;
@@ -132,22 +133,32 @@ public class CodesignManager : NetworkBehaviour
         currentState = stateType;
     }
     
+    // 用于记录每个礼物类型的总点击次数
+    private Dictionary<GiftType, int> giftTypeClickCount = new Dictionary<GiftType, int>();
+    
     public override void OnStartClient() // 每个客户端在进入场景后独立调用一次该方法，类似于 Start，本地调用，本地执行
     {
         CustomNetworkManager.instance.AddComponentsForAllPlayers(typeof(PlayerCodesign));
-
+        
+        // 初始化点击计数器
+        foreach (GiftType giftType in System.Enum.GetValues(typeof(GiftType)))
+        {
+            giftTypeClickCount[giftType] = 0;
+        }
+        
         foreach (var gift in AssetsLoader.instance.gifts)
         {
             gift.btn.onClick.AddListener(()=>
             {
-                // 检测按钮点击次数
-                gift.btnCurrentClickedCount++;
-                if (gift.btnCurrentClickedCount > gift.btnClickedCount)
+                // 增加当前礼物类型的点击次数
+                giftTypeClickCount[gift.giftType]++;
+
+                // 检测当前礼物类型的点击次数是否超过礼物本身的上限
+                if (giftTypeClickCount[gift.giftType] >= gift.btnClickedCount)
                 {
-                    gift.btn.interactable = false;
-                    return;
+                    gift.btn.interactable = false; // 禁用按钮
                 }
-                
+
                 int id = 0;
                 // 查找对应传入clientId的Player实例
                 Player[] playerss = FindObjectsOfType<Player>();
@@ -160,13 +171,6 @@ public class CodesignManager : NetworkBehaviour
                 }
                 
                 OnGiftClicked(gift.giftType,id);
-                if (currentState == StateType.Pitching)
-                {
-                    foreach (var gift in AssetsLoader.instance.gifts)
-                    {
-                        gift.btn.interactable = false;
-                    }
-                }
             });
         }
     }
@@ -179,7 +183,7 @@ public class CodesignManager : NetworkBehaviour
     // 记录哪个玩家丢了哪些礼物 (ID, 礼物列表)
     private Dictionary<int, List<GiftType>> giftList = new();
     // 记录玩家点击礼物的次数
-    private Dictionary<int, Dictionary<GiftType, int>> playerGiftClickCount = new();
+    //private Dictionary<int, Dictionary<GiftType, int>> playerGiftClickCount = new();
     
     [ClientRpc] public void RpcOnGiftClicked(GiftType giftType,int id)
     {
@@ -205,12 +209,15 @@ public class CodesignManager : NetworkBehaviour
 
         if (currentState == StateType.Pitching)
         {
-            // 特殊逻辑检测，如果满足特殊逻辑，直接返回，不执行后续代码
-            if (CheckGifts(id, giftType)) { return; }
-            
+            // // 特殊逻辑检测，如果满足特殊逻辑，直接返回，不执行后续代码
+            // if (CheckGifts(id, giftType)) { return; }
+            //
             // 如果 CheckGifts() 返回 false，执行后续的常规处理逻辑
             currentDisplayingPlayer.AddGift(giftType);
             
+            // currentPlayer = AssetsLoader.instance.GetPlayer(id);
+            // currentPlayer.UpdateScorePanel(giftType);
+            //
             // 将礼物添加到礼物列表中
             if (!giftList.ContainsKey(id))
             {
@@ -221,70 +228,70 @@ public class CodesignManager : NetworkBehaviour
     }
 
     // 检测礼物的特殊逻辑
-    public bool CheckGifts(int playerId, GiftType giftType)
-    {
-        //————————————————————————————————————————————————————————————————————————————————————
-        // 专门处理 Shit 和 Slippers 类型的礼物
-        // 筛选出所有 GiftType.Shit 和 GiftType.TuoXie 类型的礼物
-        var relevantBadGifts = giftList
-            .SelectMany(g => g.Value
-                .Where(gt => gt == GiftType.Shit || gt == GiftType.Slippers)
-                .Select(gt => new { PlayerId = g.Key, GiftType = gt }))
-            .ToList();
-        
-        // 获取相关玩家的ID列表（去重）
-        var badPlayerIds = relevantBadGifts
-            .Select(g => g.PlayerId)
-            .Distinct()
-            .ToList();
-
-        // 计算相关礼物的总数
-        int giftCount = relevantBadGifts.Count;
-
-        // 检查礼物总数是否大于 2，且来自至少两个不同的玩家
-        if (giftCount >= 2 && badPlayerIds.Count >= 2)
-        {
-            // 遍历相关礼物并给对应玩家添加相同类型的礼物
-            foreach (var badGift in relevantBadGifts)
-            { 
-                AssetsLoader.instance.GetPlayer(badGift.PlayerId).AddGift(badGift.GiftType);
-            }
-            
-            // 如果满足特殊条件，返回 true
-            return true;
-        }
-        
-        //————————————————————————————————————————————————————————————————————————————————————————
-        // 专门处理 Flower 和 Heart 类型的礼物
-        // 初始化玩家的礼物点击记录
-        if (!playerGiftClickCount.ContainsKey(playerId))
-        {
-            playerGiftClickCount[playerId] = new Dictionary<GiftType, int>();
-        }
-
-        // 初始化该礼物类型的点击次数
-        if (!playerGiftClickCount[playerId].ContainsKey(giftType))
-        {
-            playerGiftClickCount[playerId][giftType] = 0;
-        }
-
-        // 增加礼物的点击次数
-        playerGiftClickCount[playerId][giftType]++;
-
-        // 如果玩家不是第一次送出 Flower 或 Heart 类型的礼物，则执行特殊逻辑
-        if ((giftType == GiftType.Flower || giftType == GiftType.Heart) &&
-            playerGiftClickCount[playerId][giftType] > 1)
-        {
-            AssetsLoader.instance.GetPlayer(playerId).AddGiftNoScore(giftType);
-
-            // 返回 true 表示已经执行了特殊逻辑
-            return true;
-        }
-        
-        //————————————————————————————————————————————————————————————————————————————————————————
-        // 如果不满足特殊条件，返回 false
-        return false;
-    }
+    //public bool CheckGifts(int playerId, GiftType giftType)
+    //{
+        // //————————————————————————————————————————————————————————————————————————————————————
+        // // 专门处理 Shit 和 Slippers 类型的礼物
+        // // 筛选出所有 GiftType.Shit 和 GiftType.TuoXie 类型的礼物
+        // var relevantBadGifts = giftList
+        //     .SelectMany(g => g.Value
+        //         .Where(gt => gt == GiftType.Shit || gt == GiftType.Slippers)
+        //         .Select(gt => new { PlayerId = g.Key, GiftType = gt }))
+        //     .ToList();
+        //
+        // // 获取相关玩家的ID列表（去重）
+        // var badPlayerIds = relevantBadGifts
+        //     .Select(g => g.PlayerId)
+        //     .Distinct()
+        //     .ToList();
+        //
+        // // 计算相关礼物的总数
+        // int giftCount = relevantBadGifts.Count;
+        //
+        // // 检查礼物总数是否大于 2，且来自至少两个不同的玩家
+        // if (giftCount >= 2 && badPlayerIds.Count >= 2)
+        // {
+        //     // 遍历相关礼物并给对应玩家添加相同类型的礼物
+        //     foreach (var badGift in relevantBadGifts)
+        //     { 
+        //         AssetsLoader.instance.GetPlayer(badGift.PlayerId).AddGift(badGift.GiftType);
+        //     }
+        //     
+        //     // 如果满足特殊条件，返回 true
+        //     return true;
+        // }
+        //
+        // //————————————————————————————————————————————————————————————————————————————————————————
+        // // 专门处理 Flower 和 Heart 类型的礼物
+        // // 初始化玩家的礼物点击记录
+        // if (!playerGiftClickCount.ContainsKey(playerId))
+        // {
+        //     playerGiftClickCount[playerId] = new Dictionary<GiftType, int>();
+        // }
+        //
+        // // 初始化该礼物类型的点击次数
+        // if (!playerGiftClickCount[playerId].ContainsKey(giftType))
+        // {
+        //     playerGiftClickCount[playerId][giftType] = 0;
+        // }
+        //
+        // // 增加礼物的点击次数
+        // playerGiftClickCount[playerId][giftType]++;
+        //
+        // // 如果玩家不是第一次送出 Flower 或 Heart 类型的礼物，则执行特殊逻辑
+        // if ((giftType == GiftType.Flower || giftType == GiftType.Heart) &&
+        //     playerGiftClickCount[playerId][giftType] > 1)
+        // {
+        //     AssetsLoader.instance.GetPlayer(playerId).AddGiftNoScore(giftType);
+        //
+        //     // 返回 true 表示已经执行了特殊逻辑
+        //     return true;
+        // }
+        //
+        // //————————————————————————————————————————————————————————————————————————————————————————
+        // // 如果不满足特殊条件，返回 false
+        // return false;
+    //}
 
     [Command(requiresAuthority = false)] public void RollDiceStart()
     {
@@ -353,7 +360,15 @@ public class CodesignManager : NetworkBehaviour
     [ClientRpc] public void RpcPitchButtonPressed(int clientId, int index)
     {
         giftList.Clear();
-        playerGiftClickCount.Clear();
+        
+        //playerGiftClickCount.Clear();
+        
+        // 初始化点击计数器
+        foreach (GiftType giftType in System.Enum.GetValues(typeof(GiftType)))
+        {
+            giftTypeClickCount[giftType] = 0;
+        }
+        
         RpcPitchButtonPressedUniTask(clientId, index);
     }
 
@@ -375,14 +390,15 @@ public class CodesignManager : NetworkBehaviour
                 // 问题卡和答题卡淡出后销毁
                 var stickyNote1ImageLast = stickyNoteCopy.transform.GetChild(0).GetComponent<Image>();
                 var stickyNote2ImageLast = stickyNoteCopy.transform.GetChild(1).GetComponent<Image>();
+                var cardFaceCopyImageLast = cardFaceCopy.GetComponent<Image>();
                 
-                await stickyNote1ImageLast.GetComponent<Image>().DOFade(0, 1f).AsyncWaitForCompletion();
-                await stickyNote2ImageLast.GetComponent<Image>().DOFade(0, 1f).AsyncWaitForCompletion();
-                Destroy(stickyNoteCopy);
-            
-                await cardFaceCopy.GetComponent<Image>().DOFade(0, 1f).AsyncWaitForCompletion();
+                stickyNote1ImageLast.DOFade(0, 1f).AsyncWaitForCompletion();
+                stickyNote2ImageLast.DOFade(0, 1f).AsyncWaitForCompletion();
+                await cardFaceCopyImageLast.DOFade(0, 1f).AsyncWaitForCompletion();
+                
                 Destroy(cardFaceCopy);
-                
+                Destroy(stickyNoteCopy);
+
                 // 角色演讲皮肤GameObject淡出
                 await characterAnimator.GetComponent<Image>().DOFade(0, 1f).AsyncWaitForCompletion();
             }
