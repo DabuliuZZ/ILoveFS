@@ -182,8 +182,11 @@ public class CodesignManager : NetworkBehaviour
 
     // 记录哪个玩家丢了哪些礼物 (ID, 礼物列表)
     private Dictionary<int, List<GiftType>> giftList = new();
+    
+    private HashSet<int> shitGiftCache = new();
     // 记录玩家点击礼物的次数
     //private Dictionary<int, Dictionary<GiftType, int>> playerGiftClickCount = new();
+    
     
     [ClientRpc] public void RpcOnGiftClicked(GiftType giftType,int id)
     {
@@ -207,25 +210,73 @@ public class CodesignManager : NetworkBehaviour
         sequence.Append(image.DOColor(Color.clear, 2).OnComplete(() => Destroy(image.gameObject)));
         sequence.Join(image.rectTransform.DOMoveY(image.rectTransform.anchoredPosition.y + 20f, 1.5f));
 
-        if (currentState == StateType.Pitching)
+        if (currentState == StateType.Pitching&& id!=0)
         {
             // // 特殊逻辑检测，如果满足特殊逻辑，直接返回，不执行后续代码
             // if (CheckGifts(id, giftType)) { return; }
-            //
+
             // 如果 CheckGifts() 返回 false，执行后续的常规处理逻辑
-            currentDisplayingPlayer.AddGift(giftType);
+
             
             // currentPlayer = AssetsLoader.instance.GetPlayer(id);
             // currentPlayer.UpdateScorePanel(giftType);
-            //
+
             // 将礼物添加到礼物列表中
             if (!giftList.ContainsKey(id))
             {
-                giftList[id] = new List<GiftType>();
+                giftList.Add(id, new List<GiftType>());
+                Debug.Log(id+" " + giftType);
             }
-            giftList[id].Add(giftType);
+                        
+            if (!giftList[id].Contains(giftType))
+            {
+                currentDisplayingPlayer.AddGift(giftType);
+                Debug.Log(id+" " + giftType);
+                giftList[id].Add(giftType);
+                HandleScoreAdd(id,giftType);
+            }
+            
+
+
+
+
         }
     }
+
+    public void HandleScoreAdd(int id,GiftType giftType)
+    {
+        if (giftList.Count(gt => gt.Value.Contains(GiftType.Shit) || gt.Value.Contains(GiftType.Slippers))>= 2)
+        {
+            giftList.Where(gt => gt.Value.Contains(GiftType.Shit) || gt.Value.Contains(GiftType.Slippers)).ToList().ForEach(gt=>AddShitGifts(gt.Key,3));
+        }
+        
+        
+
+        if (giftType == GiftType.Flower || giftType == GiftType.Heart)
+        {
+            currentDisplayingPlayer.AddScoreWithoutGift(1);
+            AssetsLoader.instance.GetPlayer(id).AddScoreWithoutGift(1);
+        }
+        
+        if (giftType == GiftType.Speaker || giftType == GiftType.Microphone)
+        {
+            //currentDisplayingPlayer.AddScoreWithoutGift(1);
+            AssetsLoader.instance.GetPlayer(id).AddScoreWithoutGift(2);
+        }
+        
+    }
+
+    
+    public void AddShitGifts(int id,int score)
+    {
+        if (!shitGiftCache.Contains(id))
+        {
+            AssetsLoader.instance.GetPlayer(id).AddScoreWithoutGift(score);
+            shitGiftCache.Add(id);
+        }
+    }
+
+    
 
     // 检测礼物的特殊逻辑
     //public bool CheckGifts(int playerId, GiftType giftType)
@@ -312,6 +363,35 @@ public class CodesignManager : NetworkBehaviour
     {
         RpcStartPitch();
     }
+
+    private Player GetCurrentPlayer()
+    {
+        Player[] players = FindObjectsOfType<Player>();
+        foreach (var player in players)
+        {
+            if (player.isLocalPlayer && player.clientId != 0)
+            {
+                return player;
+            }
+        }
+
+        return null;
+    }    
+    private Player GetPlayer(int id)
+    {
+        Player[] players = FindObjectsOfType<Player>();
+        foreach (var player in players)
+        {
+            if (player.clientId==id)
+            {
+                return player;
+            }
+        }
+
+        return null;
+    }
+    
+    
     
     [ClientRpc] public void RpcStartPitch()
     {
@@ -360,7 +440,7 @@ public class CodesignManager : NetworkBehaviour
     [ClientRpc] public void RpcPitchButtonPressed(int clientId, int index)
     {
         giftList.Clear();
-        
+        shitGiftCache.Clear();
         //playerGiftClickCount.Clear();
         
         // 初始化点击计数器

@@ -69,7 +69,6 @@ public class PlayerScorePanel : MonoBehaviour
 public class Gift
 {
     public GiftType giftType;
-    public int score;
     public Sprite giftSprite;
     public Button btn;
     public int btnClickedCount;
