@@ -183,7 +183,7 @@ public class CodesignManager : NetworkBehaviour
     // 记录哪个玩家丢了哪些礼物 (ID, 礼物列表)
     private Dictionary<int, List<GiftType>> giftList = new();
     
-    private HashSet<int> shitGiftCache = new();
+    //private HashSet<int> shitGiftCache = new();
     // 记录玩家点击礼物的次数
     //private Dictionary<int, Dictionary<GiftType, int>> playerGiftClickCount = new();
     
@@ -235,11 +235,6 @@ public class CodesignManager : NetworkBehaviour
                 giftList[id].Add(giftType);
                 HandleScoreAdd(id,giftType);
             }
-            
-
-
-
-
         }
     }
 
@@ -250,8 +245,6 @@ public class CodesignManager : NetworkBehaviour
             giftList.Where(gt => gt.Value.Contains(GiftType.Shit) || gt.Value.Contains(GiftType.Slippers)).ToList().ForEach(gt=>AddShitGifts(gt.Key,3));
         }
         
-        
-
         if (giftType == GiftType.Flower || giftType == GiftType.Heart)
         {
             currentDisplayingPlayer.AddScoreWithoutGift(1);
@@ -264,16 +257,34 @@ public class CodesignManager : NetworkBehaviour
             AssetsLoader.instance.GetPlayer(id).AddScoreWithoutGift(2);
         }
         
-    }
+        if (giftType == GiftType.Shit || giftType == GiftType.Slippers)
+        {
+            // 获取所有发送过踩类礼物的玩家
+            var stepGiftSenders = giftList
+                .Where(gt => gt.Value.Any(g => IsStepGift(g)))
+                .Select(gt => gt.Key)
+                .Distinct()
+                .ToList();
 
+            // 如果至少有两个玩家发送了踩类礼物
+            if (stepGiftSenders.Count >= 2)
+            {
+                // 为所有发送过踩类礼物的玩家增加3分
+                stepGiftSenders.ForEach(senderId => AddShitGifts(senderId, 3));
+            }
+
+            // 踩类礼物不直接加分，返回
+            return;
+        }
+    }
+    private bool IsStepGift(GiftType giftType)
+    {
+        return giftType == GiftType.Shit || giftType == GiftType.Slippers;
+    }
     
     public void AddShitGifts(int id,int score)
     {
-        if (!shitGiftCache.Contains(id))
-        {
-            AssetsLoader.instance.GetPlayer(id).AddScoreWithoutGift(score);
-            shitGiftCache.Add(id);
-        }
+        AssetsLoader.instance.GetPlayer(id).AddScoreWithoutGift(score);
     }
 
     
@@ -440,7 +451,7 @@ public class CodesignManager : NetworkBehaviour
     [ClientRpc] public void RpcPitchButtonPressed(int clientId, int index)
     {
         giftList.Clear();
-        shitGiftCache.Clear();
+        //shitGiftCache.Clear();
         //playerGiftClickCount.Clear();
         
         // 初始化点击计数器
