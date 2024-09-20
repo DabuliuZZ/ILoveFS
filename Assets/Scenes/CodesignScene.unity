@@ -1032,8 +1032,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 35, y: 155}
-  m_SizeDelta: {x: 892.3553, y: 583.8511}
+  m_AnchoredPosition: {x: 97.387, y: 178.21}
+  m_SizeDelta: {x: 810.7734, y: 620.75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &235670427
 MonoBehaviour:
@@ -1055,7 +1055,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 692336244b1da634098c6e5391be6678, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9582,8 +9582,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -436, y: 120}
-  m_SizeDelta: {x: 218.6555, y: 419.0515}
+  m_AnchoredPosition: {x: -345.98, y: 101.54}
+  m_SizeDelta: {x: 448.4501, y: 467.399}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1647988735
 MonoBehaviour:
@@ -9598,14 +9598,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.504717, b: 0.504717, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 713be9df241701e4794a584a664b760c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10758,42 +10758,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gifts:
   - giftType: 0
-    score: 1
     giftSprite: {fileID: 21300000, guid: b1b19ddbbff8905488eb8448596e4d10, type: 3}
     btn: {fileID: 1766672154}
     btnClickedCount: 1000
     num: 0
     giftNumText: {fileID: 0}
   - giftType: 1
-    score: 1
     giftSprite: {fileID: 21300000, guid: b1b19ddbbff8905488eb8448596e4d10, type: 3}
     btn: {fileID: 725842869}
     btnClickedCount: 1000
     num: 0
     giftNumText: {fileID: 0}
   - giftType: 2
-    score: 0
     giftSprite: {fileID: 21300000, guid: e9521f5ac839fd64680c0012339c0227, type: 3}
     btn: {fileID: 1891822297}
     btnClickedCount: 1
     num: 0
     giftNumText: {fileID: 0}
   - giftType: 3
-    score: 0
     giftSprite: {fileID: 21300000, guid: e9521f5ac839fd64680c0012339c0227, type: 3}
     btn: {fileID: 1940119374}
     btnClickedCount: 1
     num: 0
     giftNumText: {fileID: 0}
   - giftType: 4
-    score: 0
     giftSprite: {fileID: 21300000, guid: 52805e95d7c7b9442b3923373aa2aa11, type: 3}
     btn: {fileID: 1204459629}
     btnClickedCount: 1
     num: 0
     giftNumText: {fileID: 0}
   - giftType: 5
-    score: 0
     giftSprite: {fileID: 21300000, guid: 7a3d4185f4cbcfc46a599a4c9273f152, type: 3}
     btn: {fileID: 1196043349}
     btnClickedCount: 1
