@@ -1184,7 +1184,7 @@ MonoBehaviour:
   scoreDown: {fileID: 3940039839170598351}
   totalScore: {fileID: 6072363672431518467}
   giftsContainer: {fileID: 1114592531218359550}
-  giftPrefab: {fileID: 5199693343561198380, guid: cb42892e8427e8a46bf8ace4d867eb4a, type: 3}
+  giftPrefab: {fileID: 8160160115056807121, guid: cb42892e8427e8a46bf8ace4d867eb4a, type: 3}
   gifts: []
 --- !u!1 &8666180640785993800
 GameObject:
