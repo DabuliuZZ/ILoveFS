@@ -914,7 +914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1461,7 +1461,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 638, y: 686.00006}
+  m_AnchoredPosition: {x: 635, y: 686}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &343213584
@@ -4762,7 +4762,7 @@ MonoBehaviour:
       selfPos: {fileID: 1662953033}
       avatarImage: {fileID: 483500231}
       avatarAnimator: {fileID: 483500233}
-      diceAnimName: RollDice1
+      diceAnimName: "\u7ED3\u679C1"
       questionCardBack: {fileID: 665359504885200646}
       questionCardFace: {fileID: 1643623161}
       StickyNotesAnimator: {fileID: 343213584}
@@ -4774,7 +4774,7 @@ MonoBehaviour:
       selfPos: {fileID: 1254238099}
       avatarImage: {fileID: 729385696}
       avatarAnimator: {fileID: 729385695}
-      diceAnimName: RollDice2
+      diceAnimName: "\u7ED3\u679C2"
       questionCardBack: {fileID: 665359504114911840}
       questionCardFace: {fileID: 395129647}
       StickyNotesAnimator: {fileID: 573200308}
@@ -4786,7 +4786,7 @@ MonoBehaviour:
       selfPos: {fileID: 563419379}
       avatarImage: {fileID: 1628231595}
       avatarAnimator: {fileID: 1628231594}
-      diceAnimName: RollDice3
+      diceAnimName: "\u7ED3\u679C3"
       questionCardBack: {fileID: 458324758}
       questionCardFace: {fileID: 1816440478}
       StickyNotesAnimator: {fileID: 804890152}
@@ -4798,7 +4798,7 @@ MonoBehaviour:
       selfPos: {fileID: 948055882}
       avatarImage: {fileID: 1058052662}
       avatarAnimator: {fileID: 1058052661}
-      diceAnimName: RollDice4
+      diceAnimName: "\u7ED3\u679C4"
       questionCardBack: {fileID: 904962183}
       questionCardFace: {fileID: 1755156485}
       StickyNotesAnimator: {fileID: 1673964993}
@@ -5020,7 +5020,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -459, y: 354}
+  m_AnchoredPosition: {x: 190, y: 276}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1058052659
@@ -5890,7 +5890,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -793, y: 335}
+  m_AnchoredPosition: {x: -713, y: 19}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1196043347
@@ -8962,7 +8962,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10603,7 +10603,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -73.87427, y: -252}
+  m_AnchoredPosition: {x: -73.87451, y: -252}
   m_SizeDelta: {x: 319.2205, y: 319.2205}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2005486644
@@ -10759,7 +10759,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 47, y: 696}
+  m_AnchoredPosition: {x: 47, y: 698}
   m_SizeDelta: {x: 262, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &1923099016750479038

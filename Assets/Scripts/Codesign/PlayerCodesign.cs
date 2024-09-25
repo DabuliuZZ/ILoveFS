@@ -140,8 +140,9 @@ public class PlayerCodesign : NetworkBehaviour
         
         Debug.Log("diceAnimator play " + diceAnimName);
         Debug.Log("avatar play AvatarRollDice");
-        //diceAnimator.Play(diceAnimName);  
-        // 随机播个骰子动画，六选一
+
+        // 播骰子动画，四选一
+        diceAnimator.Play(diceAnimName);  
         
         Invoke("HostThrowCardDeliver",diceAnimTime);
     }
