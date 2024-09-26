@@ -1,11 +1,9 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using DG.Tweening;
 using Mirror;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -48,6 +46,8 @@ public class CodesignManager : NetworkBehaviour
     // 角色演讲皮肤Animator引用
     public Animator characterAnimator;
     
+    private int currentPlayerskinIndex;
+    
     //——————————————————————————————————————————————————
     
     // 使用SerializedField来公开组的列表
@@ -58,11 +58,10 @@ public class CodesignManager : NetworkBehaviour
     //——————————————————————————————————————————————————
     
     public Sprite[] avatarSkins;
-    
-    // 角色演讲皮肤动画名列表，string
-    public string[] characterAnimNames;
     // 角色名
     public string[] playerNames;
+    // 不同角色的动画器控制器
+    public RuntimeAnimatorController[] characterAnimatorControllers;
     
     public Transform pos1;
     public Transform player1Obj;
@@ -93,7 +92,6 @@ public class CodesignManager : NetworkBehaviour
     
     public Image giftPref;
     public DisplayingPlayer currentDisplayingPlayer;
-    //public DisplayingPlayer currentPlayer;
     public StateType currentState;
     public Canvas canvas;
     public GameObject giftPanel;
@@ -227,6 +225,25 @@ public class CodesignManager : NetworkBehaviour
                 Debug.Log(id+" " + giftType);
                 giftList[id].Add(giftType);
                 HandleScoreAdd(id,giftType);
+            }
+
+            // 收到赞的动画
+            if (giftType == GiftType.Flower || giftType == GiftType.Heart)
+            {
+                characterAnimator.Play("Good");
+                Debug.Log("Good");
+            }
+            // 收到补充的动画
+            if (giftType == GiftType.Speaker || giftType == GiftType.Microphone)
+            {
+                characterAnimator.Play("Talk");
+                Debug.Log("Talk");
+            }
+            // 收到踩的动画
+            if (giftType == GiftType.Shit || giftType == GiftType.Slippers)
+            {
+                characterAnimator.Play("Bad");
+                Debug.Log("Bad");
             }
             
             currentDisplayingPlayer.AddGift(giftType);
@@ -365,7 +382,19 @@ public class CodesignManager : NetworkBehaviour
         {
             monkeyAnimator.gameObject.SetActive(false);
         });
-            
+        
+        // 获取当前演讲玩家的皮肤序号
+        Player[] playerss = FindObjectsOfType<Player>();
+        foreach (var player in playerss)
+        {
+            if (player.clientId == clientId)
+            {
+                currentPlayerskinIndex = player.skinIndex;
+            }
+        }
+        // 设置当前演讲玩家的角色动画器
+        characterAnimator.runtimeAnimatorController = characterAnimatorControllers[currentPlayerskinIndex];
+        
         RpcPitchButtonPressedUniTask(clientId, index);
     }
 
@@ -402,23 +431,12 @@ public class CodesignManager : NetworkBehaviour
 
             //——————————————————————————————————————————————————————————————————————
             // 正常流程
-            
-            // 查找对应传入clientId的Player实例
-            Player[] playerss = FindObjectsOfType<Player>();
-            foreach (var player in playerss)
-            {
-                // 从player脚本处拿到skinIndex，获取角色演讲皮肤动画名
-                if (player.clientId == clientId)
-                {
-                    string characterAnimName = characterAnimNames[player.skinIndex];
 
-                    // 角色演讲皮肤Animator播对应动画
-                    characterAnimator.Play(characterAnimName);
+            // 角色演讲皮肤Animator播对应动画
+            characterAnimator.Play("Idle");
 
-                    // 角色演讲皮肤GameObject淡入
-                    await characterAnimator.GetComponent<Image>().DOFade(1, 1f).AsyncWaitForCompletion();
-                }
-            }
+            // 角色演讲皮肤GameObject淡入
+            await characterAnimator.GetComponent<Image>().DOFade(1, 1f).AsyncWaitForCompletion();
             
             // 创建卡片和便签的实例
             cardFaceCopy = Instantiate(cardFace, pitchCardPos[index].position, Quaternion.identity,

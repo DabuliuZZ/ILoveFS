@@ -5367,13 +5367,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 71173baeffb8aca438d6d797d565a1b9, type: 3}
   - {fileID: 21300000, guid: 8376c2484b448f44da18971f916b0a4b, type: 3}
   - {fileID: 21300000, guid: fe5d0e012e330a545a54a72ff735d0b1, type: 3}
-  characterAnimNames:
-  - "\u5154\u7259"
-  - "\u7EFF\u5E3D"
-  - "\u5C0F\u590F"
-  - "\u5C0F\u9752"
-  - "\u8001\u677F"
-  - "\u9ED1\u9B3C"
   playerNames:
   - "\u5154\u7259"
   - "\u738B\u963F\u59E8"
@@ -5381,6 +5374,13 @@ MonoBehaviour:
   - "\u5C0F\u9752"
   - "\u9648\u8001\u677F"
   - "\u5927\u9ED1"
+  characterAnimatorControllers:
+  - {fileID: 9100000, guid: 977e970083a06624287230821651133e, type: 2}
+  - {fileID: 9100000, guid: 6122d85d38843cb44ba638164b1abc73, type: 2}
+  - {fileID: 9100000, guid: ca54a56f19416fd44b54720a0873f42b, type: 2}
+  - {fileID: 9100000, guid: d0cf9177970b96844843153a55b75ca9, type: 2}
+  - {fileID: 9100000, guid: 4e723c331b8994a42a0303d851845107, type: 2}
+  - {fileID: 9100000, guid: 58194a1cc2eafb14f8f1e34aa4b4c33f, type: 2}
   pos1: {fileID: 1662953033}
   player1Obj: {fileID: 1910721146}
   dice: {fileID: 680770456}
@@ -9649,7 +9649,7 @@ Animator:
   m_GameObject: {fileID: 1647988733}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 99b0c5d4bf9a3fc46bb200d2b5a5c77e, type: 2}
+  m_Controller: {fileID: 9100000, guid: 58194a1cc2eafb14f8f1e34aa4b4c33f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
