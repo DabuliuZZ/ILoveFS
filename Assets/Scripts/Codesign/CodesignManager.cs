@@ -234,11 +234,11 @@ public class CodesignManager : NetworkBehaviour
                 Debug.Log("Good");
             }
             // 收到补充的动画
-            if (giftType == GiftType.Speaker || giftType == GiftType.Microphone)
-            {
-                characterAnimator.Play("Talk");
-                Debug.Log("Talk");
-            }
+            // if (giftType == GiftType.Speaker || giftType == GiftType.Microphone)
+            // {
+            //     characterAnimator.Play("Talk");
+            //     Debug.Log("Talk");
+            // }
             // 收到踩的动画
             if (giftType == GiftType.Shit || giftType == GiftType.Slippers)
             {
