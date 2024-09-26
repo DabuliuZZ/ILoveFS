@@ -33,6 +33,8 @@ public class PlayerCodesign : NetworkBehaviour
     private Animator stickyNotesAnimator;
     private TMP_InputField stickyNote1InputField;
     private TMP_InputField stickyNote2InputField;
+    private TextMeshProUGUI playerName;
+    // private string[] playerNames;
     
     //————————————————————————————————————————————————
     
@@ -67,6 +69,7 @@ public class PlayerCodesign : NetworkBehaviour
         skinIndex = player.skinIndex;
         pos1 = codesignManager.pos1;
         player1Obj = codesignManager.player1Obj;
+        // playerNames = codesignManager.playerNames;
 
         //————————————————————————————————————————————————
         
@@ -91,6 +94,7 @@ public class PlayerCodesign : NetworkBehaviour
         {
             if (codesignManager.playerComponetsDictionary.TryGetValue(clientId, out var playerComponents))
             {
+                playerName = playerComponents.Componets.playerName;
                 avatarImage = playerComponents.Componets.avatarImage;
                 avatarAnimator = playerComponents.Componets.avatarAnimator;
                 selfPos = playerComponents.Componets.selfPos;
@@ -114,15 +118,23 @@ public class PlayerCodesign : NetworkBehaviour
                 selfPlayerObj.position = pos1.position;
                 player1Obj.position = selfPos.position;
                 avatarImage.sprite = avatarSkins[skinIndex];
+                playerName.text = codesignManager.playerNames[skinIndex];
             }
             
             CmdAvatarSprite(skinIndex,clientId);
+            CmdPlayerName(skinIndex,clientId);
         }
     }
     
     [Command] public void CmdAvatarSprite(int skinIndex, int clientId)
     {
         RpcUpdateAvatarSprite(skinIndex, clientId);
+    }
+
+    [Command]
+    public void CmdPlayerName(int skinIndex, int clientId)
+    {
+        RpcUpdatePlayerName(skinIndex, clientId);
     }
     
     [ClientRpc] public void RpcUpdateAvatarSprite(int skinIndex, int clientId)
@@ -133,8 +145,23 @@ public class PlayerCodesign : NetworkBehaviour
         }
     }
 
+    [ClientRpc] public void RpcUpdatePlayerName(int skinIndex, int clientId)
+    {
+        if (codesignManager.playerComponetsDictionary.TryGetValue(clientId, out var playerComponents))
+        {
+            playerComponents.Componets.playerName.text = codesignManager.playerNames[skinIndex];
+        }
+    }
+
     void RollDiceAnim()
     {
+        // 玩家头像跳一下
+        avatarImage.rectTransform.DOMoveY(avatarImage.rectTransform.position.y + 55f, 0.25f)
+            .OnComplete(() =>
+            {
+                avatarImage.rectTransform.DOMoveY(avatarImage.rectTransform.position.y - 55f, 0.25f);
+            });
+
         diceButton.interactable = false;
         diceButton.onClick.RemoveListener(RollDiceAnim);
         
@@ -175,8 +202,8 @@ public class PlayerCodesign : NetworkBehaviour
     {
         questionCardButton.interactable = false;
         
-        monkeyAnimator.Play("PlayHead");
         
+        monkeyAnimator.Play("PlayHead");
         diceAnimator.Play("RemoveDice");
         
         // 第一阶段：将卡牌背面翻转至90°

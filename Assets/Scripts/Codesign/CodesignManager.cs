@@ -32,6 +32,7 @@ public class CodesignComponets
     public Animator StickyNotesAnimator;
     public TMP_InputField stickyNote1InputField;
     public TMP_InputField stickyNote2InputField;
+    public TextMeshProUGUI playerName;
 }
 
 public class CodesignManager : NetworkBehaviour
@@ -60,6 +61,8 @@ public class CodesignManager : NetworkBehaviour
     
     // 角色演讲皮肤动画名列表，string
     public string[] characterAnimNames;
+    // 角色名
+    public string[] playerNames;
     
     public Transform pos1;
     public Transform player1Obj;
@@ -183,11 +186,6 @@ public class CodesignManager : NetworkBehaviour
     // 记录哪个玩家丢了哪些礼物 (ID, 礼物列表)
     private Dictionary<int, List<GiftType>> giftList = new();
     
-    //private HashSet<int> shitGiftCache = new();
-    // 记录玩家点击礼物的次数
-    //private Dictionary<int, Dictionary<GiftType, int>> playerGiftClickCount = new();
-    
-    
     [ClientRpc] public void RpcOnGiftClicked(GiftType giftType,int id)
     {
         RectTransform canvasRect = canvas.GetComponent<RectTransform>();
@@ -199,6 +197,11 @@ public class CodesignManager : NetworkBehaviour
         // 生成物体在随机的世界坐标位置
         var image = Instantiate<Image>(giftPref, canvas.transform);
         
+        // 放大特效
+        image.GetComponent<RectTransform>().localScale = new Vector3(3.5f, 3.5f, 1);
+
+        image.GetComponent<Image>().raycastTarget = false;
+        
         // 设置新生成对象的RectTransform位置
         RectTransform rectTransform = image.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = new Vector2(randomX, randomY);
@@ -207,34 +210,26 @@ public class CodesignManager : NetworkBehaviour
         
         Sequence sequence = DOTween.Sequence();
 
-        sequence.Append(image.DOColor(Color.clear, 2).OnComplete(() => Destroy(image.gameObject)));
+        sequence.Append(image.DOFade(0, 2).OnComplete(() => Destroy(image.gameObject)));
         sequence.Join(image.rectTransform.DOMoveY(image.rectTransform.anchoredPosition.y + 20f, 1.5f));
 
-        if (currentState == StateType.Pitching&& id!=0)
+        if (currentState == StateType.Pitching && id!=0)
         {
-            // // 特殊逻辑检测，如果满足特殊逻辑，直接返回，不执行后续代码
-            // if (CheckGifts(id, giftType)) { return; }
-
-            // 如果 CheckGifts() 返回 false，执行后续的常规处理逻辑
-
-            
-            // currentPlayer = AssetsLoader.instance.GetPlayer(id);
-            // currentPlayer.UpdateScorePanel(giftType);
-
             // 将礼物添加到礼物列表中
             if (!giftList.ContainsKey(id))
             {
                 giftList.Add(id, new List<GiftType>());
                 Debug.Log(id+" " + giftType);
             }
-                        
+            
             if (!giftList[id].Contains(giftType))
             {
-                currentDisplayingPlayer.AddGift(giftType);
                 Debug.Log(id+" " + giftType);
                 giftList[id].Add(giftType);
                 HandleScoreAdd(id,giftType);
             }
+            
+            currentDisplayingPlayer.AddGift(giftType);
         }
     }
 
@@ -253,7 +248,6 @@ public class CodesignManager : NetworkBehaviour
         
         if (giftType == GiftType.Speaker || giftType == GiftType.Microphone)
         {
-            //currentDisplayingPlayer.AddScoreWithoutGift(1);
             AssetsLoader.instance.GetPlayer(id).AddScoreWithoutGift(2);
         }
         
@@ -287,74 +281,6 @@ public class CodesignManager : NetworkBehaviour
         AssetsLoader.instance.GetPlayer(id).AddScoreWithoutGift(score);
     }
 
-    
-
-    // 检测礼物的特殊逻辑
-    //public bool CheckGifts(int playerId, GiftType giftType)
-    //{
-        // //————————————————————————————————————————————————————————————————————————————————————
-        // // 专门处理 Shit 和 Slippers 类型的礼物
-        // // 筛选出所有 GiftType.Shit 和 GiftType.TuoXie 类型的礼物
-        // var relevantBadGifts = giftList
-        //     .SelectMany(g => g.Value
-        //         .Where(gt => gt == GiftType.Shit || gt == GiftType.Slippers)
-        //         .Select(gt => new { PlayerId = g.Key, GiftType = gt }))
-        //     .ToList();
-        //
-        // // 获取相关玩家的ID列表（去重）
-        // var badPlayerIds = relevantBadGifts
-        //     .Select(g => g.PlayerId)
-        //     .Distinct()
-        //     .ToList();
-        //
-        // // 计算相关礼物的总数
-        // int giftCount = relevantBadGifts.Count;
-        //
-        // // 检查礼物总数是否大于 2，且来自至少两个不同的玩家
-        // if (giftCount >= 2 && badPlayerIds.Count >= 2)
-        // {
-        //     // 遍历相关礼物并给对应玩家添加相同类型的礼物
-        //     foreach (var badGift in relevantBadGifts)
-        //     { 
-        //         AssetsLoader.instance.GetPlayer(badGift.PlayerId).AddGift(badGift.GiftType);
-        //     }
-        //     
-        //     // 如果满足特殊条件，返回 true
-        //     return true;
-        // }
-        //
-        // //————————————————————————————————————————————————————————————————————————————————————————
-        // // 专门处理 Flower 和 Heart 类型的礼物
-        // // 初始化玩家的礼物点击记录
-        // if (!playerGiftClickCount.ContainsKey(playerId))
-        // {
-        //     playerGiftClickCount[playerId] = new Dictionary<GiftType, int>();
-        // }
-        //
-        // // 初始化该礼物类型的点击次数
-        // if (!playerGiftClickCount[playerId].ContainsKey(giftType))
-        // {
-        //     playerGiftClickCount[playerId][giftType] = 0;
-        // }
-        //
-        // // 增加礼物的点击次数
-        // playerGiftClickCount[playerId][giftType]++;
-        //
-        // // 如果玩家不是第一次送出 Flower 或 Heart 类型的礼物，则执行特殊逻辑
-        // if ((giftType == GiftType.Flower || giftType == GiftType.Heart) &&
-        //     playerGiftClickCount[playerId][giftType] > 1)
-        // {
-        //     AssetsLoader.instance.GetPlayer(playerId).AddGiftNoScore(giftType);
-        //
-        //     // 返回 true 表示已经执行了特殊逻辑
-        //     return true;
-        // }
-        //
-        // //————————————————————————————————————————————————————————————————————————————————————————
-        // // 如果不满足特殊条件，返回 false
-        // return false;
-    //}
-
     [Command(requiresAuthority = false)] public void RollDiceStart()
     {
         RpcRollDiceStart();
@@ -374,45 +300,21 @@ public class CodesignManager : NetworkBehaviour
     {
         RpcStartPitch();
     }
-
-    private Player GetCurrentPlayer()
-    {
-        Player[] players = FindObjectsOfType<Player>();
-        foreach (var player in players)
-        {
-            if (player.isLocalPlayer && player.clientId != 0)
-            {
-                return player;
-            }
-        }
-
-        return null;
-    }    
-    private Player GetPlayer(int id)
-    {
-        Player[] players = FindObjectsOfType<Player>();
-        foreach (var player in players)
-        {
-            if (player.clientId==id)
-            {
-                return player;
-            }
-        }
-
-        return null;
-    }
-    
-    
     
     [ClientRpc] public void RpcStartPitch()
     {
-        // 猴子淡出后失活
+        // 白板素材淡入
+        whiteBoard.GetComponent<Image>().DOFade(1, 1f).OnComplete(() => { });
+        
+        // 猴子淡出后换位置
         monkeyAnimator.GetComponent<Image>().DOFade(0, 1f).OnComplete(() =>
         {
-            monkeyAnimator.gameObject.SetActive(false);
-
-            // 白板素材淡入
-            whiteBoard.GetComponent<Image>().DOFade(1, 1f).OnComplete(() => { });
+            // 猴子换位置
+            monkeyAnimator.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(695,144);
+            monkeyAnimator.gameObject.GetComponent<RectTransform>().rotation = Quaternion.Euler(0,180,0);
+            
+            // 猴子淡入
+            monkeyAnimator.GetComponent<Image>().DOFade(1, 1f);
         });
         
         Player[] players = FindObjectsOfType<Player>();
@@ -451,15 +353,19 @@ public class CodesignManager : NetworkBehaviour
     [ClientRpc] public void RpcPitchButtonPressed(int clientId, int index)
     {
         giftList.Clear();
-        //shitGiftCache.Clear();
-        //playerGiftClickCount.Clear();
         
         // 初始化点击计数器
         foreach (GiftType giftType in System.Enum.GetValues(typeof(GiftType)))
         {
             giftTypeClickCount[giftType] = 0;
         }
-        
+
+        // 猴子淡出后失活
+        monkeyAnimator.GetComponent<Image>().DOFade(0, 1f).OnComplete(() =>
+        {
+            monkeyAnimator.gameObject.SetActive(false);
+        });
+            
         RpcPitchButtonPressedUniTask(clientId, index);
     }
 

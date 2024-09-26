@@ -53,16 +53,7 @@ public class DisplayingPlayer
     public void AddGift(GiftType giftType)
     {
         panel.AddGift(giftType);
-        //var gift = AssetsLoader.instance.GetGift(giftType);
-        // if (gift.score > 0)
-        // {
-        //     scoreUp+= gift.score;
-        // }
-        // else if(gift.score < 0)
-        // {
-        //     scoreDown+= gift.score;
-        // }
-        // score = scoreUp + scoreDown;
+
         UpdateScorePanel();
     }
     

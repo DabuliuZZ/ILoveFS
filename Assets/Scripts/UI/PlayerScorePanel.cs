@@ -35,7 +35,7 @@ public class PlayerScorePanel : MonoBehaviour
 
     public void UpdateTotalScore(int score)
     {
-        totalScore.text="Total Score:"+ score;
+        totalScore.text="总分："+ score;
     }
 
     public void AddGift(GiftType giftType)
