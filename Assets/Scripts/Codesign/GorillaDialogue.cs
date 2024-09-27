@@ -13,10 +13,9 @@ public class GorillaDialogueController : NetworkBehaviour
     [SerializeField] private TMP_Text dialogueText; // 对话文本（TextMeshPro）
 
     private int currentDialogueIndex = 0;
-    private GameObject currentEffect; // 当前特效的引用
-
+   
     [SerializeField] private Button nextDialogBtn;
-
+    
     public override void OnStartServer() // 激活并绑定对话切换按钮
     {
         nextDialogBtn.gameObject.SetActive(true);
@@ -37,22 +36,16 @@ public class GorillaDialogueController : NetworkBehaviour
             HideDialogue();
         }
     }
-
+    
     [Command(requiresAuthority = false)]
-    void CmdPlayDialogue(GorillaDialogue dialogue)
+    public void CmdPlayDialogue(GorillaDialogue dialogue)
     {
         RpcPlayDialogue(dialogue);
     }
 
     [ClientRpc]
-    void RpcPlayDialogue(GorillaDialogue dialogue)
+    public void RpcPlayDialogue(GorillaDialogue dialogue)
     {
-        // 清除上一句话的特效
-        if (currentEffect != null)
-        {
-            Destroy(currentEffect);
-        }
-
         // 根据对话的暂停状态来处理
         if (dialogue.isPaused)
         {
@@ -69,15 +62,9 @@ public class GorillaDialogueController : NetworkBehaviour
         // 播放动画
         gorillaAnimator.Play(dialogue.animationName);
         
-        // 实例化特效
-        if (dialogue.effectPrefab != null)
-        {
-            currentEffect = Instantiate(dialogue.effectPrefab, transform.position, Quaternion.identity);
-            NetworkServer.Spawn(currentEffect); // 确保特效在网络中被同步
-        }
     }
 
-    void DisplayDialogue(string text)
+    public void DisplayDialogue(string text)
     {
         dialogueBox.DOFade(1,1f);  // 激活对话框
         dialogueText.text = text; // 显示文本
@@ -88,4 +75,5 @@ public class GorillaDialogueController : NetworkBehaviour
         dialogueBox.DOFade(0,1f); // 隐藏对话框
         dialogueText.text = string.Empty; // 清空文本
     }
+    
 }

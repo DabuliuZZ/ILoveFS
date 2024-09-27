@@ -3091,6 +3091,7 @@ MonoBehaviour:
   dialogueBox: {fileID: 1547515372}
   dialogueText: {fileID: 1367076280}
   nextDialogBtn: {fileID: 33800752}
+  canvas: {fileID: 0}
 --- !u!1 &563419378
 GameObject:
   m_ObjectHideFlags: 0

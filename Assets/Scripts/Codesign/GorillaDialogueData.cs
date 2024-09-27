@@ -5,7 +5,6 @@ public class GorillaDialogue
 {
     public string dialogueText; // 对话文本
     public string animationName; // 动画名
-    public GameObject effectPrefab; // 特效Prefab
     public bool isPaused; // 是否暂停
     public Vector3 dialogueTextPosition; // 文本位置XYZ
 }

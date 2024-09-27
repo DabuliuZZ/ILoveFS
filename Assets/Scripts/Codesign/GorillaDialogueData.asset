@@ -15,17 +15,17 @@ MonoBehaviour:
   dialogues:
   - dialogueText: "\u5927\u5BB6\u597D"
     animationName: Idle
-    effectPrefab: {fileID: 0}
+    effectPrefab: {fileID: 4050381492860459470, guid: 55e30bc93e793084faeb8b4701df0888, type: 3}
     isPaused: 0
     dialogueTextPosition: {x: 350, y: 135, z: 0}
   - dialogueText: 222
     animationName: Idle
-    effectPrefab: {fileID: 0}
+    effectPrefab: {fileID: 4380488355302255585, guid: 1314c999a2c3ec54ea734042af8fc7de, type: 3}
     isPaused: 0
     dialogueTextPosition: {x: 350, y: 135, z: 0}
   - dialogueText: 333
     animationName: DrawCard1
-    effectPrefab: {fileID: 0}
+    effectPrefab: {fileID: 2304419194160267673, guid: 5b21f06c6430ec34e9f5f5d5dce50a7e, type: 3}
     isPaused: 0
     dialogueTextPosition: {x: 350, y: 135, z: 0}
   - dialogueText: 
