@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
@@ -75,6 +76,13 @@ public class CodesignManager : NetworkBehaviour
     [SerializeField] private Button startPitchButton;
     [SerializeField] private Button pitchButton;
     [SerializeField] private Button endButton;
+
+    [SerializeField] private Button startWritingButton;
+    [SerializeField] private TMP_Text countdownText;
+    [SerializeField] private float writingCountdownTime;
+    [SerializeField] private float pitchingCountdownTime;
+    private float currentCountdownTime;
+    private Coroutine countdownCoroutine;
     
     //——————————————————————————————————————————————————
 
@@ -90,7 +98,7 @@ public class CodesignManager : NetworkBehaviour
     public float dropStickyNotesAnimTime;
     
     //————————————————————————————————————————————————————
-    
+
     public Image giftPref;
     public DisplayingPlayer currentDisplayingPlayer;
     public StateType currentState;
@@ -122,13 +130,60 @@ public class CodesignManager : NetworkBehaviour
         startPitchButton.gameObject.SetActive(true);
         pitchButton.gameObject.SetActive(true);
         endButton.gameObject.SetActive(true);
+        startWritingButton.gameObject.SetActive(true);
         
         rollDiceButton.onClick.AddListener(RollDiceStart);
         offDiceButton.onClick.AddListener(OffDice);
+        startWritingButton.onClick.AddListener(QuizTimerStart);
         startPitchButton.onClick.AddListener(StartPitch);
         pitchButton.onClick.AddListener(Pitch); 
         endButton.onClick.AddListener(End);
     }
+
+    //——————————————————————————————————————————————————————————————————————————————————
+    // 写作阶段。启动计时器
+    public void QuizTimerStart()
+    {
+        ChangeState(StateType.Writing);
+        CmdStartTimer(writingCountdownTime);
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdStartTimer(float countdownTime)
+    {
+        RpcStartTimer(countdownTime);
+    }
+
+    [ClientRpc]
+    private void RpcStartTimer(float countdownTime)
+    {
+        // 启动计时器逻辑，如设置计时时间和启动倒计时显示
+        Debug.Log("Timer started for all players.");
+        StartCountdown(countdownTime);
+    }
+    
+    private void StartCountdown(float countdownTime)
+    {
+        if (countdownCoroutine != null)
+        {
+            StopCoroutine(countdownCoroutine);
+        }
+        currentCountdownTime = countdownTime;
+        countdownCoroutine = StartCoroutine(CountdownRoutine());
+    }
+
+    private IEnumerator CountdownRoutine()
+    {
+        while (currentCountdownTime > 0)
+        {
+            countdownText.text = currentCountdownTime.ToString("F0");
+            yield return new WaitForSeconds(1f);
+            currentCountdownTime--;
+        }
+        countdownText.text = "0";
+    }
+    
+    //——————————————————————————————————————————————————————————————————————————————
     
     public void ChangeState(StateType stateType)
     {
@@ -467,7 +522,10 @@ public class CodesignManager : NetworkBehaviour
             stickyNote2Image.DOFade(1, 1f);
 
             //——————————————————————————————————————————————————————————
-
+            // 启动演讲阶段计时器
+            CmdStartTimer(pitchingCountdownTime);
+            
+            //——————————————————————————————————————————————————————————
             // 使用索引查找子级对象
             var stickyNote1InputField = stickyNoteCopy.transform.GetChild(0).GetComponent<TMP_InputField>();
             var stickyNote2InputField = stickyNoteCopy.transform.GetChild(1).GetComponent<TMP_InputField>();
