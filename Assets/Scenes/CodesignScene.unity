@@ -5684,7 +5684,7 @@ MonoBehaviour:
       diceAnimName: "\u7ED3\u679C1"
       questionCardBack: {fileID: 665359504885200646}
       questionCardFace: {fileID: 1643623161}
-      StickyNotesAnimator: {fileID: 343213584}
+      stickyNotesAnimator: {fileID: 0}
       stickyNote1InputField: {fileID: 235779436}
       stickyNote2InputField: {fileID: 310058333}
       playerName: {fileID: 5367875592728308159}
@@ -5697,7 +5697,7 @@ MonoBehaviour:
       diceAnimName: "\u7ED3\u679C2"
       questionCardBack: {fileID: 665359504114911840}
       questionCardFace: {fileID: 395129647}
-      StickyNotesAnimator: {fileID: 573200308}
+      stickyNotesAnimator: {fileID: 0}
       stickyNote1InputField: {fileID: 1089409981}
       stickyNote2InputField: {fileID: 113021825}
       playerName: {fileID: 729385698}
@@ -5710,7 +5710,7 @@ MonoBehaviour:
       diceAnimName: "\u7ED3\u679C3"
       questionCardBack: {fileID: 458324758}
       questionCardFace: {fileID: 1816440478}
-      StickyNotesAnimator: {fileID: 804890152}
+      stickyNotesAnimator: {fileID: 0}
       stickyNote1InputField: {fileID: 1370811018}
       stickyNote2InputField: {fileID: 442273279}
       playerName: {fileID: 432496402}
@@ -5723,7 +5723,7 @@ MonoBehaviour:
       diceAnimName: "\u7ED3\u679C4"
       questionCardBack: {fileID: 904962183}
       questionCardFace: {fileID: 1755156485}
-      StickyNotesAnimator: {fileID: 1673964993}
+      stickyNotesAnimator: {fileID: 0}
       stickyNote1InputField: {fileID: 1972231630}
       stickyNote2InputField: {fileID: 117582819}
       playerName: {fileID: 1057753076}

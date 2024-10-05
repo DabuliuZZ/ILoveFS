@@ -5,6 +5,7 @@ using DG.Tweening;
 using Mirror;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using Sequence = DG.Tweening.Sequence;
@@ -27,7 +28,7 @@ public class CodesignComponets
     public string diceAnimName;
     public GameObject questionCardBack;
     public GameObject questionCardFace;
-    public Animator StickyNotesAnimator;
+    public Animator stickyNotesAnimator;
     public TMP_InputField stickyNote1InputField;
     public TMP_InputField stickyNote2InputField;
     public TextMeshProUGUI playerName;
@@ -392,7 +393,7 @@ public class CodesignManager : NetworkBehaviour
         {
             // 获取玩家的特定对象
             var cardFace = playerComponents.Componets.questionCardFace;
-            var stickyNotes = playerComponents.Componets.StickyNotesAnimator.gameObject;
+            var stickyNotes = playerComponents.Componets.stickyNotesAnimator.gameObject;
 
             // 获取Canvas对象
             Canvas canvas = FindObjectOfType<Canvas>();
@@ -520,7 +521,7 @@ public class CodesignManager : NetworkBehaviour
         {
             // 获取玩家的特定对象
             var cardFace = playerComponents.Componets.questionCardFace;
-            var stickyNotes = playerComponents.Componets.StickyNotesAnimator.gameObject;
+            var stickyNotes = playerComponents.Componets.stickyNotesAnimator.gameObject;
 
             // 获取Canvas对象
             Canvas canvas = FindObjectOfType<Canvas>();

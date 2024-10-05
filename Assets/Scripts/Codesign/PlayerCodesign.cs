@@ -102,7 +102,7 @@ public class PlayerCodesign : NetworkBehaviour
 
                 questionCardBack = playerComponents.Componets.questionCardBack;
                 questionCardFace = playerComponents.Componets.questionCardFace;
-                stickyNotesAnimator = playerComponents.Componets.StickyNotesAnimator;
+                stickyNotesAnimator = playerComponents.Componets.stickyNotesAnimator;
                 stickyNote1InputField = playerComponents.Componets.stickyNote1InputField;
                 stickyNote2InputField = playerComponents.Componets.stickyNote2InputField;
                 
