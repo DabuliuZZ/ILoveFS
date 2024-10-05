@@ -327,7 +327,7 @@ public class CodesignManager : NetworkBehaviour
         monkeyAnimator.GetComponent<Image>().DOFade(0, 1f).OnComplete(() =>
         {
             // 猴子换位置
-            monkeyAnimator.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(695,144);
+            monkeyAnimator.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(695,0);
             monkeyAnimator.gameObject.GetComponent<RectTransform>().rotation = Quaternion.Euler(0,180,0);
             
             // 猴子淡入
@@ -383,18 +383,6 @@ public class CodesignManager : NetworkBehaviour
             monkeyAnimator.gameObject.SetActive(false);
         });
         
-        // 获取当前演讲玩家的皮肤序号
-        Player[] playerss = FindObjectsOfType<Player>();
-        foreach (var player in playerss)
-        {
-            if (player.clientId == clientId)
-            {
-                currentPlayerskinIndex = player.skinIndex;
-            }
-        }
-        // 设置当前演讲玩家的角色动画器
-        characterAnimator.runtimeAnimatorController = characterAnimatorControllers[currentPlayerskinIndex];
-        
         RpcPitchButtonPressedUniTask(clientId, index);
     }
 
@@ -432,6 +420,18 @@ public class CodesignManager : NetworkBehaviour
             //——————————————————————————————————————————————————————————————————————
             // 正常流程
 
+            // 获取当前演讲玩家的皮肤序号
+            Player[] playerss = FindObjectsOfType<Player>();
+            foreach (var player in playerss)
+            {
+                if (player.clientId == clientId)
+                {
+                    currentPlayerskinIndex = player.skinIndex;
+                }
+            }
+            // 设置当前演讲玩家的角色动画器
+            characterAnimator.runtimeAnimatorController = characterAnimatorControllers[currentPlayerskinIndex];
+            
             // 角色演讲皮肤Animator播对应动画
             characterAnimator.Play("Idle");
 

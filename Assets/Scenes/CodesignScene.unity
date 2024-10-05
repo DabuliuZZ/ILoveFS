@@ -3091,7 +3091,6 @@ MonoBehaviour:
   dialogueBox: {fileID: 1547515372}
   dialogueText: {fileID: 1367076280}
   nextDialogBtn: {fileID: 33800752}
-  canvas: {fileID: 0}
 --- !u!1 &563419378
 GameObject:
   m_ObjectHideFlags: 0
@@ -10222,7 +10221,7 @@ Animator:
   m_GameObject: {fileID: 1647988733}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 58194a1cc2eafb14f8f1e34aa4b4c33f, type: 2}
+  m_Controller: {fileID: 9100000, guid: d0cf9177970b96844843153a55b75ca9, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
