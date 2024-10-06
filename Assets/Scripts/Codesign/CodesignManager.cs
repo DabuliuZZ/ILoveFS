@@ -78,6 +78,7 @@ public class CodesignManager : NetworkBehaviour
     [SerializeField] private Button endButton;
 
     [SerializeField] private Button startWritingButton;
+    [SerializeField] private GameObject timer;
     [SerializeField] private TMP_Text countdownText;
     [SerializeField] private float writingCountdownTime;
     [SerializeField] private float pitchingCountdownTime;
@@ -159,6 +160,7 @@ public class CodesignManager : NetworkBehaviour
     {
         // 启动计时器逻辑，如设置计时时间和启动倒计时显示
         Debug.Log("Timer started for all players.");
+        timer.SetActive(true);
         StartCountdown(countdownTime);
     }
     
@@ -408,6 +410,7 @@ public class CodesignManager : NetworkBehaviour
         }
         
         giftPanel.SetActive(true);
+        timer.SetActive(false);
     }
     
     
