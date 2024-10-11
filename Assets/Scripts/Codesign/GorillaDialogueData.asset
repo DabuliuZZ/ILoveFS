@@ -13,53 +13,63 @@ MonoBehaviour:
   m_Name: GorillaDialogueData
   m_EditorClassIdentifier: 
   dialogues:
-  - dialogueText: "\u5927\u5BB6\u597D"
+  - dialogueText: "\u55E8\uFF0C\u6B22\u8FCE\u6765\u5230\u4F5B\u5C71\u6E7E\u533A\u521B\u65B0\u5B66\u9662\uFF01\u770B\uFF01\u7A97\u5916\u5C31\u662F\u3002"
+    animationName: "\u624B\u6307\u767D\u677F"
+    vfxAnimationName: 
+    isPaused: 0
+  - dialogueText: "\u5B66\u9662\u5EFA\u8BBE\u5DF2\u7ECF\u51E0\u4E4E\u5B8C\u6210\u4E86\uFF0C\u4F46\u662F\u8F6F\u8BBE\u65BD\u548C\u670D\u52A1\u8FD8\u5728\u8BBE\u8BA1\u2026\u2026"
     animationName: Idle
-    effectPrefab: {fileID: 4050381492860459470, guid: 55e30bc93e793084faeb8b4701df0888, type: 3}
+    vfxAnimationName: 
     isPaused: 0
-    dialogueTextPosition: {x: 350, y: 135, z: 0}
-  - dialogueText: 222
-    animationName: Idle
-    effectPrefab: {fileID: 4380488355302255585, guid: 1314c999a2c3ec54ea734042af8fc7de, type: 3}
+  - dialogueText: "\u6211\u4EEC\u4E5F\u4E0D\u77E5\u9053\u600E\u4E48\u505A\u624D\u53EF\u4EE5\u540C\u65F6\u6EE1\u8DB3\u5B66\u751F\u548C\u8001\u5E08\u7684\u9700\u6C42\uFF01"
+    animationName: PlayHead
+    vfxAnimationName: 
     isPaused: 0
-    dialogueTextPosition: {x: 350, y: 135, z: 0}
-  - dialogueText: 333
-    animationName: DrawCard1
-    effectPrefab: {fileID: 2304419194160267673, guid: 5b21f06c6430ec34e9f5f5d5dce50a7e, type: 3}
-    isPaused: 0
-    dialogueTextPosition: {x: 350, y: 135, z: 0}
-  - dialogueText: 
+  - dialogueText: "\u6240\u4EE5\u8BF7\u4F60\u4EEC\u6765codesign\uFF0C\u6839\u636E\u81EA\u5DF1\u7684\u9700\u6C42\uFF0C\u63D0\u51FA\u81EA\u5DF1\u7684\u610F\u89C1\u548C\u89C1\u89E3\uFF01"
     animationName: DrawCard2
-    effectPrefab: {fileID: 0}
+    vfxAnimationName: 
+    isPaused: 0
+  - dialogueText: 
+    animationName: Idle
+    vfxAnimationName: 
     isPaused: 1
-    dialogueTextPosition: {x: 350, y: 135, z: 0}
-  - dialogueText: 44
-    animationName: PlayHead
-    effectPrefab: {fileID: 0}
+  - dialogueText: "\u5F85\u4F1A\u6211\u4EEC\u4F1A\u9080\u8BF7\u6BCF\u4E00\u4F4Ddesigner\u4E0A\u6765\u5206\u4EAB\u81EA\u5DF1\u7684\u60F3\u6CD5\uFF0C\u6BCF\u4EBA3\u5206\u949F\uFF0C\u5C31\u5728\u8FD9\u8FB9\u7684\u767D\u677F\u4E0A\u3002"
+    animationName: "\u624B\u6307\u767D\u677F"
+    vfxAnimationName: 
     isPaused: 0
-    dialogueTextPosition: {x: 350, y: 135, z: 0}
-  - dialogueText: 555
-    animationName: Idle
-    effectPrefab: {fileID: 0}
+  - dialogueText: "\u5728\u4E0B\u9762\u89C2\u770B\u7684designer\u53EF\u4EE5\u7528\u4F60\u4EEC\u624B\u8FB9\u7684\u793C\u7269\u8868\u8FBE\u81EA\u5DF1\u7684\u89C2\u70B9\uFF01"
+    animationName: "\u624B\u6307\u73A9\u5BB6"
+    vfxAnimationName: "\u7279\u65481"
     isPaused: 0
-    dialogueTextPosition: {x: 350, y: 135, z: 0}
-  - dialogueText: 666
+  - dialogueText: "\u5982\u679C\u4F60\u89C9\u5F97\u4ED6\u8BF4\u7684\u5BF9\uFF0C\u5C31\u9001\u51FA\u8D5E\u6216\u7231\u5FC3\uFF0C\u6BCF\u9001\u51FA\u4E00\u4E2A\u90FD\u80FD\u4E3A\u5206\u4EAB\u8005\u548C\u81EA\u5DF1\u52A01\u5206\u3002"
     animationName: PlayHead
-    effectPrefab: {fileID: 0}
+    vfxAnimationName: "\u7279\u65481"
+    isPaused: 0
+  - dialogueText: "\u4F46\u8981\u6CE8\u610F\uFF0C\u8D5E\u548C\u7231\u5FC3\u6CA1\u6BCF\u8F6E\u6700\u591A\u53EA\u80FD\u52A02\u5206\u54E6\uFF01"
+    animationName: "\u624B\u6307\u73A9\u5BB6"
+    vfxAnimationName: "\u7279\u65481"
+    isPaused: 0
+  - dialogueText: "\u5982\u679C\u4F60\u8981\u5728\u5206\u4EAB\u8005\u7684\u57FA\u7840\u4E0A\u8865\u5145\uFF0C\u5C31\u70B9\u51FB\u201C\u6211\u8981\u8865\u5145\u201D\u680F\u91CC\u7684\u793C\u7269\uFF01"
+    animationName: "\u5012\u7ACB"
+    vfxAnimationName: "\u7279\u65482"
+    isPaused: 0
+  - dialogueText: "\u6BCF\u4E00\u6B21\u8865\u5145\u90FD\u53EF\u4EE5\u4E3A\u81EA\u5DF1\u52A03\u5206\uFF01"
+    animationName: "\u5012\u7ACB\u5F85\u673A"
+    vfxAnimationName: "\u7279\u65482"
+    isPaused: 0
+  - dialogueText: "\u5982\u679C\u4F60\u4E0D\u540C\u610F\u5206\u4EAB\u8005\u7684\u610F\u89C1\uFF0C\u4E5F\u4E0D\u8981\u72B9\u8C6B\uFF0C\u76F4\u63A5\u6253\u51FA\u201C\u6211\u4E0D\u540C\u610F\u201D\u680F\u91CC\u7684\u7269\u54C1\uFF01"
+    animationName: "\u5012\u7ACB\u5F85\u673A"
+    vfxAnimationName: "\u7279\u65483"
+    isPaused: 0
+  - dialogueText: "\u5982\u679C\u6709\u5176\u4ED6\u73A9\u5BB6\u50CF\u4F60\u4E00\u6837\u8868\u8FBE\u4E86\u4E0D\u6EE1\uFF0C\u5219\u4F60\u4EEC\u6240\u6709\u8868\u8FBE\u4E0D\u6EE1\u7684\u73A9\u5BB6\u90FD\u5C06\u52A03\u5206\uFF01"
+    animationName: "\u5012\u7ACB\u540E\u6254\u5361\u724C"
+    vfxAnimationName: "\u7279\u65483"
+    isPaused: 0
+  - dialogueText: "\u800C\u4E14\u8FD8\u6CA1\u4E0A\u9650\u54E6\uFF0C\u54C8\u54C8\u54C8\uFF01\uFF01\u671F\u5F85\u5927\u5BB6\u7684\u7CBE\u5F69\u8BA8\u8BBA\uFF0CENJOY\uFF01"
+    animationName: "\u5012\u7ACB"
+    vfxAnimationName: "\u7279\u65483"
+    isPaused: 0
+  - dialogueText: 
+    animationName: "\u5012\u7ACB\u540E\u5F85\u673A"
+    vfxAnimationName: Empty
     isPaused: 1
-    dialogueTextPosition: {x: 350, y: 135, z: 0}
-  - dialogueText: "\u7279\u65481"
-    animationName: Idle
-    effectPrefab: {fileID: 4050381492860459470, guid: 55e30bc93e793084faeb8b4701df0888, type: 3}
-    isPaused: 0
-    dialogueTextPosition: {x: 350, y: 135, z: 0}
-  - dialogueText: "\u7279\u65482"
-    animationName: Idle
-    effectPrefab: {fileID: 4380488355302255585, guid: 1314c999a2c3ec54ea734042af8fc7de, type: 3}
-    isPaused: 0
-    dialogueTextPosition: {x: 350, y: 135, z: 0}
-  - dialogueText: "\u7279\u65483"
-    animationName: Idle
-    effectPrefab: {fileID: 2304419194160267673, guid: 5b21f06c6430ec34e9f5f5d5dce50a7e, type: 3}
-    isPaused: 0
-    dialogueTextPosition: {x: 350, y: 135, z: 0}

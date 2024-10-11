@@ -385,7 +385,7 @@ public class CodesignManager : NetworkBehaviour
         monkeyAnimator.GetComponent<Image>().DOFade(0, 1f).OnComplete(() =>
         {
             // 猴子换位置
-            monkeyAnimator.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(695,0);
+            monkeyAnimator.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(672,0);
             monkeyAnimator.gameObject.GetComponent<RectTransform>().rotation = Quaternion.Euler(0,180,0);
             
             // 猴子淡入

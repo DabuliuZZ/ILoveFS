@@ -8,7 +8,8 @@ public class GorillaDialogueController : NetworkBehaviour
 {
     [SerializeField] private GorillaDialogueData dialogueData; // 引用ScriptableObject
     [SerializeField] private Animator gorillaAnimator; // 猩猩Animator引用
-
+    [SerializeField] private Animator vfxAnimator;
+    
     [SerializeField] private Image dialogueBox; // 对话框的UI元素
     [SerializeField] private TMP_Text dialogueText; // 对话文本（TextMeshPro）
 
@@ -54,14 +55,18 @@ public class GorillaDialogueController : NetworkBehaviour
         else
         {
             DisplayDialogue(dialogue.dialogueText); // 显示对话文本
-            
+
             // 设置对话文本的位置
-            dialogueText.transform.localPosition = dialogue.dialogueTextPosition; // 更新文本位置
+            // dialogueText.transform.localPosition = dialogue.dialogueTextPosition; // 更新文本位置
         }
 
         // 播放动画
         gorillaAnimator.Play(dialogue.animationName);
-        
+        // 特效动画
+        if (dialogue.vfxAnimationName != null)
+        {
+            vfxAnimator.Play(dialogue.vfxAnimationName);
+        }
     }
 
     public void DisplayDialogue(string text)
