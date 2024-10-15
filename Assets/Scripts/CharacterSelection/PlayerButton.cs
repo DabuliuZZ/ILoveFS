@@ -51,6 +51,9 @@ public class PlayerButton : NetworkBehaviour
                 // 进行按钮的初始化或其他设置
                 switchButton.onClick.AddListener(OnSwitchSkin);
                 confirmButton.onClick.AddListener(OnConfirmSkin);
+                
+                // 播BGM
+                // AudioManager.Instance.PlayBGMLocal();
             }
         }
     }
@@ -75,6 +78,9 @@ public class PlayerButton : NetworkBehaviour
         }
         confirmButton.interactable = true;
         characterImage.color = Color.white;
+        
+        // 播切换按钮音效
+        // AudioManager.Instance.PlayAudioClipLocal();
     }
     
     [Command] public void CmdSendSpriteChange(int newSkinIndex, int clientId)
@@ -110,6 +116,9 @@ public class PlayerButton : NetworkBehaviour
         confirmButton.interactable = false;
         
         CmdConfirmSkin(currentSkinIndex,clientId);
+        
+        // 播锁定按钮音效
+        // AudioManager.Instance.PlayAudioClipLocal();
     }
 
     [Command] public void CmdConfirmSkin(int confirmedSkinIndex,int clientId)

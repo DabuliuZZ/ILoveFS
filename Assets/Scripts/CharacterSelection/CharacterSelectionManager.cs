@@ -91,5 +91,8 @@ public class CharacterSelectionManager : NetworkBehaviour
     {
         // 跳场景
         NetworkManager.singleton.ServerChangeScene("CodesignScene");
+        
+        // 播下个场景的BGM
+        // AudioManager.Instance.PlayBGM();
     }
 }

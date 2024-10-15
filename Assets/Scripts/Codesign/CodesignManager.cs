@@ -183,6 +183,9 @@ public class CodesignManager : NetworkBehaviour
             currentCountdownTime--;
         }
         countdownText.text = "0";
+        
+        // 播放计时器结束音效
+        // AudioManager.Instance.PlayAudioClip();
     }
     
     //——————————————————————————————————————————————————————————————————————————————
@@ -288,18 +291,27 @@ public class CodesignManager : NetworkBehaviour
             // 收到赞的动画
             if (giftType == GiftType.Flower || giftType == GiftType.Heart)
             {
+                // 播放赞礼物声音
+                // AudioManager.Instance.PlayAudioClip();
+                
                 characterAnimator.Play("Good");
                 Debug.Log("Good");
             }
             // 收到补充的动画
-            // if (giftType == GiftType.Speaker || giftType == GiftType.Microphone)
-            // {
-            //     characterAnimator.Play("Talk");
-            //     Debug.Log("Talk");
-            // }
+            if (giftType == GiftType.Speaker || giftType == GiftType.Microphone)
+            {   
+                // 播放补充礼物声音
+                // AudioManager.Instance.PlayAudioClip();
+                
+                // characterAnimator.Play("Talk");
+                Debug.Log("Talk");
+            }
             // 收到踩的动画
             if (giftType == GiftType.Shit || giftType == GiftType.Slippers)
             {
+                // 播放踩礼物声音
+                // AudioManager.Instance.PlayAudioClip();
+                
                 characterAnimator.Play("Bad");
                 Debug.Log("Bad");
             }
@@ -358,6 +370,9 @@ public class CodesignManager : NetworkBehaviour
 
     [Command(requiresAuthority = false)] public void RollDiceStart()
     {
+        // 播放骰子出现音效
+        // AudioManager.Instance.PlayAudioClip();
+        
         RpcRollDiceStart();
     }
     
@@ -373,13 +388,16 @@ public class CodesignManager : NetworkBehaviour
     
     [Command(requiresAuthority = false)] public void StartPitch()
     {
+        // 播放白板出现音效
+        // AudioManager.Instance.PlayAudioClip();
+        
         RpcStartPitch();
     }
     
     [ClientRpc] public void RpcStartPitch()
     {
         // 白板素材淡入
-        whiteBoard.GetComponent<Image>().DOFade(1, 1f).OnComplete(() => { });
+        whiteBoard.GetComponent<Image>().DOFade(1, 1f);
         
         // 猴子淡出后换位置
         monkeyAnimator.GetComponent<Image>().DOFade(0, 1f).OnComplete(() =>
@@ -413,9 +431,11 @@ public class CodesignManager : NetworkBehaviour
         timer.SetActive(false);
     }
     
-    
     [Command(requiresAuthority = false)] public void Pitch()
     {
+        // 切换BGM
+        // AudioManager.Instance.PlayBGM();
+        
         if (currentPlayerIndex < playerComponets.Count)
         {
             RpcPitchButtonPressed(playerComponets[currentPlayerIndex].clientId, currentPlayerIndex);
@@ -497,6 +517,9 @@ public class CodesignManager : NetworkBehaviour
             // 角色演讲皮肤GameObject淡入
             await characterAnimator.GetComponent<Image>().DOFade(1, 1f).AsyncWaitForCompletion();
             
+            // 播放角色登场音效
+            // AudioManager.Instance.PlayAudioClip();
+            
             // 创建卡片和便签的实例
             cardFaceCopy = Instantiate(cardFace, pitchCardPos[index].position, Quaternion.identity,
                     canvas.transform);
@@ -512,7 +535,6 @@ public class CodesignManager : NetworkBehaviour
             var stickyNote1Image = stickyNoteCopy.transform.GetChild(0).GetComponent<Image>();
             var stickyNote2Image = stickyNoteCopy.transform.GetChild(1).GetComponent<Image>();     
             
-            
             cardFaceCopyImage.color = new Color(255,255,255,0);
             cardFaceCopyImage.DOFade(1, 1f);
 
@@ -522,11 +544,15 @@ public class CodesignManager : NetworkBehaviour
             
             stickyNote2Image.color = new Color(255,255,255,0);
             stickyNote2Image.gameObject.SetActive(true);
-            stickyNote2Image.DOFade(1, 1f);
-
-            //——————————————————————————————————————————————————————————
-            // 启动演讲阶段计时器
-            CmdStartTimer(pitchingCountdownTime);
+            stickyNote2Image.DOFade(1, 1f).OnComplete(() =>
+            {
+                //——————————————————————————————————————————————————————————
+                // 启动演讲阶段计时器
+                CmdStartTimer(pitchingCountdownTime);
+                
+                // 播放计时器启动音效
+                // AudioManager.Instance.PlayAudioClip();
+            });
             
             //——————————————————————————————————————————————————————————
             // 使用索引查找子级对象

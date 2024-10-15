@@ -67,6 +67,10 @@ public class GorillaDialogueController : NetworkBehaviour
         {
             vfxAnimator.Play(dialogue.vfxAnimationName);
         }
+        else
+        {
+            vfxAnimator.Play("Empty");
+        }
     }
 
     public void DisplayDialogue(string text)

@@ -160,6 +160,9 @@ public class PlayerCodesign : NetworkBehaviour
             .OnComplete(() =>
             {
                 avatarImage.rectTransform.DOMoveY(avatarImage.rectTransform.position.y - 55f, 0.25f);
+                
+                // 播撞到骰子音效（马里奥问号方块）
+                // AudioManager.Instance.PlayAudioClipLocal();
             });
 
         diceButton.interactable = false;
@@ -189,6 +192,9 @@ public class PlayerCodesign : NetworkBehaviour
         questionCardAnimator.Play("CardDrop");
         monkeyAnimator.Play("DrawCard2");
         
+        // 播放卡牌落下音效
+        // AudioManager.Instance.PlayAudioClipLocal();
+        
         Invoke("QuestionCardAddListener",cardDeliverAnimTime);
     }
     
@@ -202,28 +208,39 @@ public class PlayerCodesign : NetworkBehaviour
     {
         questionCardButton.interactable = false;
         
-        
         monkeyAnimator.Play("PlayHead");
         diceAnimator.Play("RemoveDice");
         
+        // 播放卡牌翻转音效
+        // AudioManager.Instance.PlayAudioClipLocal();
+        
         // 第一阶段：将卡牌背面翻转至90°
-        questionCardBack.transform.DORotate(new Vector3(0, 90, 0), 0.5f).OnComplete(() =>
+        questionCardBack.transform.DORotate(new Vector3(0, 90, 0), 0.5f)
+            .OnComplete(() =>
         {
             // 完成第一阶段翻转后，背面失活，正面激活
             questionCardBack.SetActive(false);
             questionCardFace.SetActive(true);
 
             // 第二阶段：将卡牌正面从90°翻转至0°
-            questionCardFace.transform.DORotate(new Vector3(0, 0, 0), 0.5f);
+            questionCardFace.transform.DORotate(new Vector3(0, 0, 0), 0.5f)
+                .OnComplete(() =>
+                {
+                    stickyNotesAnimator.Play("DropStickyNotes");
+                    
+                    // 播放卡牌落下音效
+                    // AudioManager.Instance.PlayAudioClipLocal();
+                });
         });
-        
-        stickyNotesAnimator.Play("DropStickyNotes");
         
         Invoke("ActiveInputField",dropStickyAnimTime);
     }
 
     void ActiveInputField()
     {
+        // 切换BGM
+        // AudioManager.Instance.PlayBGMLocal();
+        
         stickyNote1InputField.interactable = true;
         stickyNote2InputField.interactable = true;
     }
