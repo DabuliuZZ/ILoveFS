@@ -5,6 +5,7 @@ using System.Linq;
 using DG.Tweening;
 using Mirror;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -105,6 +106,7 @@ public class CodesignManager : NetworkBehaviour
     public StateType currentState;
     public Canvas canvas;
     public GameObject giftPanel;
+    public Transform whiteBoardParent;
     
     private void Awake()
     {
@@ -185,7 +187,7 @@ public class CodesignManager : NetworkBehaviour
         countdownText.text = "0";
         
         // 播放计时器结束音效
-        // AudioManager.Instance.PlayAudioClip();
+        AudioManager.Instance.PlayAudioClip(9);
     }
     
     //——————————————————————————————————————————————————————————————————————————————
@@ -292,7 +294,7 @@ public class CodesignManager : NetworkBehaviour
             if (giftType == GiftType.Flower || giftType == GiftType.Heart)
             {
                 // 播放赞礼物声音
-                // AudioManager.Instance.PlayAudioClip();
+                AudioManager.Instance.PlayAudioClip(10);
                 
                 characterAnimator.Play("Good");
                 Debug.Log("Good");
@@ -301,7 +303,7 @@ public class CodesignManager : NetworkBehaviour
             if (giftType == GiftType.Speaker || giftType == GiftType.Microphone)
             {   
                 // 播放补充礼物声音
-                // AudioManager.Instance.PlayAudioClip();
+                AudioManager.Instance.PlayAudioClip(11);
                 
                 // characterAnimator.Play("Talk");
                 Debug.Log("Talk");
@@ -310,7 +312,7 @@ public class CodesignManager : NetworkBehaviour
             if (giftType == GiftType.Shit || giftType == GiftType.Slippers)
             {
                 // 播放踩礼物声音
-                // AudioManager.Instance.PlayAudioClip();
+                AudioManager.Instance.PlayAudioClip(12);
                 
                 characterAnimator.Play("Bad");
                 Debug.Log("Bad");
@@ -371,7 +373,7 @@ public class CodesignManager : NetworkBehaviour
     [Command(requiresAuthority = false)] public void RollDiceStart()
     {
         // 播放骰子出现音效
-        // AudioManager.Instance.PlayAudioClip();
+        AudioManager.Instance.PlayAudioClip(2);
         
         RpcRollDiceStart();
     }
@@ -389,7 +391,7 @@ public class CodesignManager : NetworkBehaviour
     [Command(requiresAuthority = false)] public void StartPitch()
     {
         // 播放白板出现音效
-        // AudioManager.Instance.PlayAudioClip();
+        AudioManager.Instance.PlayAudioClip(6);
         
         RpcStartPitch();
     }
@@ -403,7 +405,7 @@ public class CodesignManager : NetworkBehaviour
         monkeyAnimator.GetComponent<Image>().DOFade(0, 1f).OnComplete(() =>
         {
             // 猴子换位置
-            monkeyAnimator.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(672,0);
+            monkeyAnimator.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(672,-23);
             monkeyAnimator.gameObject.GetComponent<RectTransform>().rotation = Quaternion.Euler(0,180,0);
             
             // 猴子淡入
@@ -432,10 +434,7 @@ public class CodesignManager : NetworkBehaviour
     }
     
     [Command(requiresAuthority = false)] public void Pitch()
-    {
-        // 切换BGM
-        // AudioManager.Instance.PlayBGM();
-        
+    { 
         if (currentPlayerIndex < playerComponets.Count)
         {
             RpcPitchButtonPressed(playerComponets[currentPlayerIndex].clientId, currentPlayerIndex);
@@ -469,6 +468,9 @@ public class CodesignManager : NetworkBehaviour
     {
         if (playerComponetsDictionary.TryGetValue(clientId, out var playerComponents))
         {
+            // 播PItchBGM
+            AudioManager.Instance.PlayBGM(1,1);
+            
             // 获取玩家的特定对象
             var cardFace = playerComponents.Componets.questionCardFace;
             var stickyNotes = playerComponents.Componets.stickyNotesAnimator.gameObject;
@@ -518,15 +520,15 @@ public class CodesignManager : NetworkBehaviour
             await characterAnimator.GetComponent<Image>().DOFade(1, 1f).AsyncWaitForCompletion();
             
             // 播放角色登场音效
-            // AudioManager.Instance.PlayAudioClip();
+            AudioManager.Instance.PlayAudioClip(7);
             
             // 创建卡片和便签的实例
             cardFaceCopy = Instantiate(cardFace, pitchCardPos[index].position, Quaternion.identity,
-                    canvas.transform);
+                    whiteBoardParent);
             stickyNoteCopy = Instantiate(stickyNotes, pitchNotesPos[index].position, Quaternion.identity,
-                    canvas.transform);
+                    whiteBoardParent);
             stickyNoteCopy.GetComponent<Animator>().Play("Empty");
-
+            
             // 问题卡与答题卡激活后淡入
             cardFaceCopy.SetActive(true);
             stickyNoteCopy.SetActive(true);
@@ -551,7 +553,7 @@ public class CodesignManager : NetworkBehaviour
                 CmdStartTimer(pitchingCountdownTime);
                 
                 // 播放计时器启动音效
-                // AudioManager.Instance.PlayAudioClip();
+                AudioManager.Instance.PlayAudioClip(8);
             });
             
             //——————————————————————————————————————————————————————————

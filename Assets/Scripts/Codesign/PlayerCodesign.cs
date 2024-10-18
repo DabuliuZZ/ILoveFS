@@ -162,7 +162,7 @@ public class PlayerCodesign : NetworkBehaviour
                 avatarImage.rectTransform.DOMoveY(avatarImage.rectTransform.position.y - 55f, 0.25f);
                 
                 // 播撞到骰子音效（马里奥问号方块）
-                // AudioManager.Instance.PlayAudioClipLocal();
+                AudioManager.Instance.PlayAudioClipLocal(3);
             });
 
         diceButton.interactable = false;
@@ -193,7 +193,7 @@ public class PlayerCodesign : NetworkBehaviour
         monkeyAnimator.Play("DrawCard2");
         
         // 播放卡牌落下音效
-        // AudioManager.Instance.PlayAudioClipLocal();
+        AudioManager.Instance.PlayAudioClipLocal(4);
         
         Invoke("QuestionCardAddListener",cardDeliverAnimTime);
     }
@@ -212,7 +212,7 @@ public class PlayerCodesign : NetworkBehaviour
         diceAnimator.Play("RemoveDice");
         
         // 播放卡牌翻转音效
-        // AudioManager.Instance.PlayAudioClipLocal();
+        AudioManager.Instance.PlayAudioClipLocal(5);
         
         // 第一阶段：将卡牌背面翻转至90°
         questionCardBack.transform.DORotate(new Vector3(0, 90, 0), 0.5f)
@@ -229,7 +229,7 @@ public class PlayerCodesign : NetworkBehaviour
                     stickyNotesAnimator.Play("DropStickyNotes");
                     
                     // 播放卡牌落下音效
-                    // AudioManager.Instance.PlayAudioClipLocal();
+                    AudioManager.Instance.PlayAudioClipLocal(4);
                 });
         });
         
@@ -239,7 +239,7 @@ public class PlayerCodesign : NetworkBehaviour
     void ActiveInputField()
     {
         // 切换BGM
-        // AudioManager.Instance.PlayBGMLocal();
+        AudioManager.Instance.PlayBGMLocal(1,1);
         
         stickyNote1InputField.interactable = true;
         stickyNote2InputField.interactable = true;

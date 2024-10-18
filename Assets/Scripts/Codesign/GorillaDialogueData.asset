@@ -31,7 +31,7 @@ MonoBehaviour:
     isPaused: 0
   - dialogueText: 
     animationName: Idle
-    vfxAnimationName: 
+    vfxAnimationName: Empty
     isPaused: 1
   - dialogueText: "\u5F85\u4F1A\u6211\u4EEC\u4F1A\u9080\u8BF7\u6BCF\u4E00\u4F4Ddesigner\u4E0A\u6765\u5206\u4EAB\u81EA\u5DF1\u7684\u60F3\u6CD5\uFF0C\u6BCF\u4EBA3\u5206\u949F\uFF0C\u5C31\u5728\u8FD9\u8FB9\u7684\u767D\u677F\u4E0A\u3002"
     animationName: "\u624B\u6307\u767D\u677F"
@@ -79,5 +79,5 @@ MonoBehaviour:
     isPaused: 0
   - dialogueText: 
     animationName: "\u5012\u7ACB\u540E\u5F85\u673A"
-    vfxAnimationName: 
+    vfxAnimationName: Empty
     isPaused: 1

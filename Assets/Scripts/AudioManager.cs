@@ -39,27 +39,27 @@ public class AudioManager : NetworkBehaviour
     }
 
     // 调用此方法在所有客户端播放音频，添加了音量参数
-    public void PlayAudioClip(int clipIndex, float volume)
+    public void PlayAudioClip(int clipIndex)
     {
         if (isServer)
         {
             // 如果是服务器，直接调用客户端Rpc
-            RpcPlayAudioClip(clipIndex, volume);
+            RpcPlayAudioClip(clipIndex);
         }
         else
         {
             // 如果是客户端，发送命令到服务器
-            CmdPlayAudioClip(clipIndex, volume);
+            CmdPlayAudioClip(clipIndex);
         }
     }
 
     // 本地播放音效
-    public void PlayAudioClipLocal(int clipIndex, float volume)
+    public void PlayAudioClipLocal(int clipIndex)
     {
         if (audioSource != null && clipIndex >= 0 && clipIndex < audioClips.Length)
         {
             // 在本地播放音频，使用指定的音量
-            audioSource.PlayOneShot(audioClips[clipIndex], volume);
+            audioSource.PlayOneShot(audioClips[clipIndex]);
         }
     }
 
@@ -71,56 +71,56 @@ public class AudioManager : NetworkBehaviour
             if (bgmSource.isPlaying)
             {
                 // 如果当前有BGM在播放，执行淡出淡入
-                StartCoroutine(FadeOutAndIn(bgmIndex, volume));
+                StartCoroutine(FadeOutAndIn(bgmIndex,volume));
             }
             else
             {
                 // 没有BGM在播放，直接淡入新BGM
-                StartCoroutine(FadeIn(bgmIndex, volume));
+                StartCoroutine(FadeIn(bgmIndex,volume));
             }
         }
     }
 
     // 客户端向服务器发送命令，添加了音量参数
     [Command(requiresAuthority = false)]
-    void CmdPlayAudioClip(int clipIndex, float volume)
+    void CmdPlayAudioClip(int clipIndex)
     {
         // 服务器接收到命令，调用客户端Rpc
-        RpcPlayAudioClip(clipIndex, volume);
+        RpcPlayAudioClip(clipIndex);
     }
 
     // 服务器向所有客户端广播，添加了音量参数
     [ClientRpc]
-    void RpcPlayAudioClip(int clipIndex, float volume)
+    void RpcPlayAudioClip(int clipIndex)
     {
-        PlayAudioClipLocal(clipIndex, volume);
+        PlayAudioClipLocal(clipIndex);
     }
 
     // 调用此方法在所有客户端播放背景音乐
-    public void PlayBGM(int bgmIndex, float volume)
+    public void PlayBGM(int bgmIndex,float volume)
     {
         if (isServer)
         {
-            RpcPlayBGM(bgmIndex, volume);
+            RpcPlayBGM(bgmIndex,volume);
         }
         else
         {
-            CmdPlayBGM(bgmIndex, volume);
+            CmdPlayBGM(bgmIndex,volume);
         }
     }
 
     // 客户端向服务器发送播放BGM的命令
     [Command(requiresAuthority = false)]
-    void CmdPlayBGM(int bgmIndex, float volume)
+    void CmdPlayBGM(int bgmIndex,float volume)
     {
-        RpcPlayBGM(bgmIndex, volume);
+        RpcPlayBGM(bgmIndex,volume);
     }
 
     // 服务器向所有客户端广播播放BGM
     [ClientRpc]
-    void RpcPlayBGM(int bgmIndex, float volume)
+    void RpcPlayBGM(int bgmIndex,float volume)
     {
-        PlayBGMLocal(bgmIndex, volume);
+        PlayBGMLocal(bgmIndex,volume);
     }
 
     // 调用此方法在所有客户端停止背景音乐

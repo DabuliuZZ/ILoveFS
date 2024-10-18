@@ -53,13 +53,16 @@ public class PlayerButton : NetworkBehaviour
                 confirmButton.onClick.AddListener(OnConfirmSkin);
                 
                 // 播BGM
-                // AudioManager.Instance.PlayBGMLocal();
+                AudioManager.Instance.PlayBGMLocal(0,1);
             }
         }
     }
 
     private void OnSwitchSkin()
     {
+        // 播切换按钮音效
+        AudioManager.Instance.PlayAudioClipLocal(0);
+        
         currentSkinIndex = (currentSkinIndex + 1) % characterSkins.Length;
         
         characterImage.sprite = characterSkins[currentSkinIndex];
@@ -78,9 +81,6 @@ public class PlayerButton : NetworkBehaviour
         }
         confirmButton.interactable = true;
         characterImage.color = Color.white;
-        
-        // 播切换按钮音效
-        // AudioManager.Instance.PlayAudioClipLocal();
     }
     
     [Command] public void CmdSendSpriteChange(int newSkinIndex, int clientId)
@@ -118,7 +118,7 @@ public class PlayerButton : NetworkBehaviour
         CmdConfirmSkin(currentSkinIndex,clientId);
         
         // 播锁定按钮音效
-        // AudioManager.Instance.PlayAudioClipLocal();
+        AudioManager.Instance.PlayAudioClipLocal(1);
     }
 
     [Command] public void CmdConfirmSkin(int confirmedSkinIndex,int clientId)

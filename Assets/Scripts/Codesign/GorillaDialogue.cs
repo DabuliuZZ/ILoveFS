@@ -62,14 +62,11 @@ public class GorillaDialogueController : NetworkBehaviour
 
         // 播放动画
         gorillaAnimator.Play(dialogue.animationName);
+        
         // 特效动画
         if (dialogue.vfxAnimationName != null)
         {
             vfxAnimator.Play(dialogue.vfxAnimationName);
-        }
-        else
-        {
-            vfxAnimator.Play("Empty");
         }
     }
 
