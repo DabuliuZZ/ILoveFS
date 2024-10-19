@@ -5832,8 +5832,8 @@ MonoBehaviour:
   startWritingButton: {fileID: 1942325656}
   timer: {fileID: 1207448016}
   countdownText: {fileID: 631046259}
-  writingCountdownTime: 5
-  pitchingCountdownTime: 5
+  writingCountdownTime: 120
+  pitchingCountdownTime: 120
   pitchCardPos:
   - {fileID: 1186479948}
   - {fileID: 1186479948}
