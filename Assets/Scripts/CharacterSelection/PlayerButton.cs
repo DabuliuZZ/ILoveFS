@@ -53,7 +53,7 @@ public class PlayerButton : NetworkBehaviour
                 confirmButton.onClick.AddListener(OnConfirmSkin);
                 
                 // 播BGM
-                AudioManager.Instance.PlayBGMLocal(0,1);
+                AudioManager.Instance.PlayBGMLocal(0,0.4f);
             }
         }
     }

@@ -469,7 +469,7 @@ public class CodesignManager : NetworkBehaviour
         if (playerComponetsDictionary.TryGetValue(clientId, out var playerComponents))
         {
             // 播PItchBGM
-            AudioManager.Instance.PlayBGM(1,1);
+            AudioManager.Instance.PlayBGM(1,0.4f);
             
             // 获取玩家的特定对象
             var cardFace = playerComponents.Componets.questionCardFace;
