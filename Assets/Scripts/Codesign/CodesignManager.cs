@@ -91,7 +91,8 @@ public class CodesignManager : NetworkBehaviour
     [SerializeField] private Transform[] pitchCardPos;
     [SerializeField] private Transform[] pitchNotesPos;
     private int currentPlayerIndex;
-
+    private int pitchClickedCount;
+    
     //————————————————————————————————————————————————————
     
     public float diceAnimTime;
@@ -434,11 +435,16 @@ public class CodesignManager : NetworkBehaviour
     }
     
     [Command(requiresAuthority = false)] public void Pitch()
-    { 
+    {
+        pitchClickedCount++;
+        if (pitchClickedCount == 1) {currentPlayerIndex = 2;}
+        if (pitchClickedCount == 2) {currentPlayerIndex = 3;}
+        if (pitchClickedCount == 3) {currentPlayerIndex = 1;}
+        if (pitchClickedCount == 4) {currentPlayerIndex = 4;}
+        
         if (currentPlayerIndex < playerComponets.Count)
         {
             RpcPitchButtonPressed(playerComponets[currentPlayerIndex].clientId, currentPlayerIndex);
-            currentPlayerIndex++;
         }
     }
 
